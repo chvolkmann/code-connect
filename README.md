@@ -15,31 +15,41 @@ Requires Python 3 and a **Linux** machine you want to connect to. Tested under P
 You need to set up VS Code Server before using this utility. For this, connect to your target in a remote SSH session.  
 Afterwards, you should have a folder `.vscode-server` in your home directory.
 ### Shell Integration
+If you are familiar with `virtualenv`, `conda`, etc., this will be familiar.
+
 #### Bash
 Execute this and place it in your `.bashrc`
 ```bash
-source init.sh
+source activate.sh
 ```
 #### Fish
 Execute this and place it in your `config.fish`
 ```fish
-source init.fish
+source activate.fish
 ```
 
 
 ## Usage
 First, run
-```
+```bash
 code-connect
 ```
 This will provide you with the `code` command from your server's VS Code Server installation. It also sets the environment variable `VSCODE_IPC_HOOK_CLI` to a valid IPC socket.
 
 Then you're free to use
-```
+```bash
 code /path/to/file
 ```
-
 Note that you need to have an active instance of VS Code running.
+
+### Deactivating
+
+To disable everything again, just close the terminal session, or use
+```bash
+code-disconnect
+deactivate
+```
+
 
 ## How it works
 VS Code uses datagram sockets to communicate between a terminal and the rendering window.
