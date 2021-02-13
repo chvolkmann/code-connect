@@ -23,6 +23,7 @@ code-connect () {
         echo ""
         exit 1
     fi
+    
     echo "${cyan}You can now use ${magenta}code${cyan}, try it!"
     echo ""
     echo "  ${magenta}code .${reset}"
@@ -38,7 +39,7 @@ deactivate () {
     unset -f code-connect
     unset -f code-disconnect
     unset -f deactivate
-    echo "${cyan}code-connect deactivated${reset}"
+    echo "${magenta}code-connect ${cyan}deactivated${reset}"
     echo ""
 }
 
