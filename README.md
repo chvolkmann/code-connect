@@ -61,7 +61,7 @@ echo $VSCODE_IPC_HOOK_CLI
 ```
 which displays an output in the integrated terminal, but not on the other one.
 
-In order, every socket is checked to see it is listening. For this, the following snippet based on [this answer on StackOverflow](https://unix.stackexchange.com/a/556790) was used.
+In order, every socket is checked to see if it is listening. For this, the following snippet based on [this answer on StackOverflow](https://unix.stackexchange.com/a/556790) was used.
 ```bash
 socat -u OPEN:/dev/null UNIX-CONNECT:/path/to/socket
 ```
@@ -74,6 +74,8 @@ Sample output:
 export VSCODE_IPC_HOOK_CLI="/run/user/1000/vscode-ipc-dd85cff3-04c7-4ca6-9c06-229acd73008c.sock"
 alias code="/home/user/.vscode-server/bin/622cb03f7e070a9670c94bae1a45d78d7181fbd4/bin/code"
 ```
+
+`code-connect` is an alias for `source $(code_connect.py)`, so whenever it is called, the variables will be loaded into the current shell session.
 
 ## Credit
 - Based on an [answer on StackOverflow](https://stackoverflow.com/a/60949722) by [stabledog](https://stackoverflow.com/users/237059/Stabledog)
