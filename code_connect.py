@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess as sp
 from typing import Iterable, List, Tuple
 import time
+import os
 
 MAX_IDLE_TIME = 4 * 60 * 60
 
@@ -37,18 +38,15 @@ def next_open_socket(socks: Iterable[Path]) -> Path:
             'Please make sure to connect to this machine with a standard VS Code remote SSH session before using this tool.'
         )
 
-def main(max_idle_time: int = MAX_IDLE_TIME):
-    # List all possible sockets
-    # Some of these are obsolete and not listening
-    socks = sort_by_access_timestamp(Path('/run/user/1000/').glob('vscode-ipc-*.sock'))
-
-    # Only consider the ones that were active N seconds ago
-    now = time.time()
-    socks = [sock for ts, sock in socks if now - ts <= max_idle_time]
-
-    # Find the first socket that is open, most recently accessed first
-    ipc_sock = next_open_socket(socks)
-
+def main(shell: str = None, max_idle_time: int = MAX_IDLE_TIME):
+    # Determine shell for outputting the proper format
+    if not shell:
+        shell = os.getenv('SHELL', 'bash')
+    shell_path = Path(shell)
+    if shell_path.exists():
+        # Just get the name of the binary
+        shell = shell_path.name
+    
     # Every entry in ~/.vscode-server/bin corresponds to a commit id
     # Pick the most recent one
     code_repos = sort_by_access_timestamp(Path.home().glob('.vscode-server/bin/*'))
@@ -64,13 +62,32 @@ def main(max_idle_time: int = MAX_IDLE_TIME):
 
     code_binary = code_repo / 'bin' / 'code'
 
+    # List all possible sockets
+    # Some of these are obsolete and not listening
+    socks = sort_by_access_timestamp(Path('/run/user/1000/').glob('vscode-ipc-*.sock'))
+
+    # Only consider the ones that were active N seconds ago
+    now = time.time()
+    socks = [sock for ts, sock in socks if now - ts <= max_idle_time]
+
+    # Find the first socket that is open, most recently accessed first
+    ipc_sock = next_open_socket(socks)
+
     # Output a shell string to stdout
-    source = '\n'.join([
-        f'# source this into your shell of choice',
-        f'export VSCODE_IPC_HOOK_CLI="{ipc_sock}"',
-        f'alias code="{code_binary}"'
-    ])
-    print(source)
+    if shell == 'fish':
+        source_lines = [
+            f'# fish usage: ./code_connect.py | source',
+            f'export VSCODE_IPC_HOOK_CLI="{ipc_sock}"',
+            f'alias code="{code_binary}"'
+        ]
+    else:
+        source_lines = [
+            f'# bash usage: ./code_connect.py | eval',
+            f'export VSCODE_IPC_HOOK_CLI="{ipc_sock}"',
+            f'alias code="{code_binary}"'
+        ]
+
+    print('\n'.join(source_lines))
 
 if __name__ == '__main__':
     main()

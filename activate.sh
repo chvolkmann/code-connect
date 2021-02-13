@@ -11,7 +11,6 @@ code-connect () {
     ret="$?"
     if [[ "$ret" -ne 0 ]]; then
         echo "${red}Discovery of VS Code instance failed.${reset}"
-        echo ""
         exit 1
     fi
 
@@ -20,14 +19,12 @@ code-connect () {
     ret="$?"
     if [[ "$ret" -ne 0 ]]; then
         echo "${red}Discovery of VS Code instance failed.${reset}"
-        echo ""
         exit 1
     fi
     
     echo "${cyan}You can now use ${magenta}code${cyan}, try it!"
     echo ""
     echo "  ${magenta}code .${reset}"
-    echo ""
 }
 code-disconnect () {
     unset VSCODE_IPC_HOOK_CLI
@@ -39,8 +36,7 @@ deactivate () {
     unset -f code-connect
     unset -f code-disconnect
     unset -f deactivate
-    echo "${magenta}code-connect ${cyan}deactivated${reset}"
-    echo ""
+    echo "${magenta}code-connect ${cyan}deactivated.${reset}"
 }
 
 echo "${cyan}Connect to this machine with a VS Code Remote SSH session once."
@@ -50,4 +46,3 @@ echo ""
 echo "  ${magenta}code-connect"
 echo ""
 echo "${cyan}and the code CLI command should be available to you.${reset}"
-echo ""
