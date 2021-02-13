@@ -1,10 +1,17 @@
 _CODE_CONNECT_DIR=$(dirname $0)
+
+cyan=`tput setaf 7`
+red=`tput setaf 1`
+magenta=`tput setaf 6`
+reset=`tput sgr0`
+
 code-connect () {
     result=$($_CODE_CONNECT_DIR/code_connect.py)
 
     ret="$?"
     if [[ "$ret" -ne 0 ]]; then
-        echo "Discovery of VS Code instance failed."
+        echo "${red}Discovery of VS Code instance failed.${reset}"
+        echo ""
         exit 1
     fi
 
@@ -12,12 +19,14 @@ code-connect () {
 
     ret="$?"
     if [[ "$ret" -ne 0 ]]; then
-        echo "Discovery of VS Code instance failed."
+        echo "${red}Discovery of VS Code instance failed.${reset}"
+        echo ""
         exit 1
     fi
-    echo "You can now use code, try it!"
+    echo "${cyan}You can now use ${magenta}code${cyan}, try it!"
     echo ""
-    echo "  code ."
+    echo "  ${magenta}code .${reset}"
+    echo ""
 }
 code-disconnect () {
     unset VSCODE_IPC_HOOK_CLI
@@ -29,13 +38,15 @@ deactivate () {
     unset -f code-connect
     unset -f code-disconnect
     unset -f deactivate
-    echo "code-connect deactivated"
+    echo "${cyan}code-connect deactivated${reset}"
+    echo ""
 }
 
-echo "Connect to this machine with a VS Code Remote SSH session once."
+echo "${cyan}Connect to this machine with a VS Code Remote SSH session once."
 echo ""
 echo "Afterwards, run"
 echo ""
-echo "  code-connect"
+echo "  ${magenta}code-connect"
 echo ""
-echo "and the code CLI command should be available to you."
+echo "${cyan}and the code CLI command should be available to you.${reset}"
+echo ""

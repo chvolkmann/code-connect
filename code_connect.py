@@ -65,10 +65,11 @@ def main(max_idle_time: int = MAX_IDLE_TIME):
     code_binary = code_repo / 'bin' / 'code'
 
     # Output a shell string to stdout
-    source = f"""
-    export VSCODE_IPC_HOOK_CLI="{ipc_sock}"
-    alias code="{code_binary}"
-    """.strip()
+    source = '\n'.join([
+        f'# source this into your shell of choice',
+        f'export VSCODE_IPC_HOOK_CLI="{ipc_sock}"',
+        f'alias code="{code_binary}"'
+    ])
     print(source)
 
 if __name__ == '__main__':
