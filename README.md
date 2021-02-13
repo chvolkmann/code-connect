@@ -43,13 +43,15 @@ code /path/to/file
 Note that you need to have an active instance of VS Code running.
 
 ### Deactivating
-
-To disable everything again, just close the terminal session, or use
+To unlink the `code` executable and unset the environment variable, use
 ```bash
 code-disconnect
-deactivate
 ```
 
+And to disable `code-connect` and unset the aliases, use
+```bash
+deactivate
+```
 
 ## How it works
 VS Code uses datagram sockets to communicate between a terminal and the rendering window.
@@ -77,15 +79,15 @@ socat -u OPEN:/dev/null UNIX-CONNECT:/path/to/socket
 ```
 This returns `0` if and only if there's something listening.
 
-The script `code_connect.py` does all of the above steps and outputs a string to stdout.
+The script `code_connect.py` does all of the above steps and outputs a string to stdout. Currently, output for **bash** and **fish** is supported.
 
-Sample output:
+Sample output (bash):
 ```bash
 export VSCODE_IPC_HOOK_CLI="/run/user/1000/vscode-ipc-dd85cff3-04c7-4ca6-9c06-229acd73008c.sock"
 alias code="/home/user/.vscode-server/bin/622cb03f7e070a9670c94bae1a45d78d7181fbd4/bin/code"
 ```
 
-`code-connect` is an alias for `source $(code_connect.py)`, so whenever it is called, the variables will be loaded into the current shell session.
+`code-connect` is an alias sourcing the output of `code_connect.py` into the current shell session.
 
 ## Credit
 - Based on an [answer on StackOverflow](https://stackoverflow.com/a/60949722) by [stabledog](https://stackoverflow.com/users/237059/Stabledog)
