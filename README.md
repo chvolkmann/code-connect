@@ -9,6 +9,8 @@ You would have to get to VS Code, connect to your server through a remote sessio
 This utility enables you to call `code .` instead, just as you would in a WSL session.
 
 ## Installation
+### Requirements
+Requires Python 3 and a **Linux** machine you want to connect to. Tested under Python 3.8, but slightly lower should work fine.
 ### VS Code Server
 You need to set up VS Code Server before using this utility. For this, connect to your target in a remote SSH session.  
 Afterwards, you should have a folder `.vscode-server` in your home directory.
