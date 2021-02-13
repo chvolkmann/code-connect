@@ -23,7 +23,9 @@ Execute this and place it in your `.bashrc`
 source activate.sh
 ```
 #### Fish
-Execute this and place it in your `config.fish`
+Fish users can alternatively install an accompanying [fish plugin](https://github.com/chvolkmann/code-connect-fish-plugin).
+
+If you want to do it manually, execute this and place it in your `config.fish`
 ```fish
 source activate.fish
 ```
