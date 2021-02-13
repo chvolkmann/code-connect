@@ -4,47 +4,72 @@
 
 from pathlib import Path
 import subprocess as sp
-from typing import Iterable, List
+from typing import Iterable, List, Tuple
 import time
 
-NOW = time.time()
-MAX_IDLE_TIME = 4*60*60
+MAX_IDLE_TIME = 4 * 60 * 60
+
+def fail(*msgs, retcode=1):
+    for msg in msgs:
+        print(msg)
+    exit(retcode)
 
 def is_socket_open(path: Path) -> bool:
     try:
-        proc = sp.run(['socat', '-u', 'OPEN:/dev/null', f'UNIX-CONNECT:{path.resolve()}'])
-        is_open = (proc.returncode == 0)
+        # capture output to prevent printing to stdout/stderr
+        proc = sp.run(['socat', '-u', 'OPEN:/dev/null', f'UNIX-CONNECT:{path.resolve()}'], capture_output=True)
+        return (proc.returncode == 0)
     except FileNotFoundError:
-        is_open = False
-    return is_open
+        return False
 
-def sort_by_access_timestamp(entries: Iterable[Path]) -> List:
-    entries = [(e.stat().st_atime, e) for e in entries]
-    entries = sorted(entries, reverse=True)
-    return entries
+def sort_by_access_timestamp(paths: Iterable[Path]) -> List[Tuple[float, Path]]:
+    paths = [(p.stat().st_atime, p) for p in paths]
+    paths = sorted(paths, reverse=True)
+    return paths
 
-# There can be garbage sockets
-socks = sort_by_access_timestamp(Path('/run/user/1000/').glob('vscode-ipc-*.sock'))
+def next_open_socket(socks: Iterable[Path]) -> Path:
+    try:
+        return next((sock for sock in socks if is_socket_open(sock)))
+    except StopIteration:
+        fail(
+            'Could not find an open VS Code IPC socket.',
+            '',
+            'Please make sure to connect to this machine with a standard VS Code remote SSH session before using this tool.'
+        )
 
-# Only consider the ones that were active N seconds ago
-socks = [sock for ts, sock in socks if NOW - ts <= MAX_IDLE_TIME]
+def main(max_idle_time: int = MAX_IDLE_TIME):
+    # List all possible sockets
+    # Some of these are obsolete and not listening
+    socks = sort_by_access_timestamp(Path('/run/user/1000/').glob('vscode-ipc-*.sock'))
 
-# Find the first socket that is open, most recently accessed first
-ipc_sock = next((sock for sock in socks if is_socket_open(sock)), None)
-if not ipc_sock:
-    raise FileNotFoundError('Could not find a suitable VS Code server IPC socket')
+    # Only consider the ones that were active N seconds ago
+    now = time.time()
+    socks = [sock for ts, sock in socks if now - ts <= max_idle_time]
 
-# Every entry in ~/.vscode-server/bin is a commit id
-# Pick the most recent one
-code_repos = sort_by_access_timestamp(Path.home().glob('.vscode-server/bin/*'))
-_, code_repo = code_repos[0]
+    # Find the first socket that is open, most recently accessed first
+    ipc_sock = next_open_socket(socks)
 
-code_binary = code_repo / 'bin' / 'code'
+    # Every entry in ~/.vscode-server/bin corresponds to a commit id
+    # Pick the most recent one
+    code_repos = sort_by_access_timestamp(Path.home().glob('.vscode-server/bin/*'))
+    if len(code_repos) == 0:
+        fail(
+            'No installation of VS Code Server detected!',
+            '',
+            'Please connect to this machine through a remote SSH session and try again.',
+            'Afterwards there should exist a folder under ~/.vscode-server'
+        )
 
-source = f"""
-export VSCODE_IPC_HOOK_CLI="{ipc_sock}"
-alias code="{code_binary}"
-""".strip()
+    _, code_repo = code_repos[0]
 
-# Output to stdout
-print(source)
+    code_binary = code_repo / 'bin' / 'code'
+
+    # Output a shell string to stdout
+    source = f"""
+    export VSCODE_IPC_HOOK_CLI="{ipc_sock}"
+    alias code="{code_binary}"
+    """.strip()
+    print(source)
+
+if __name__ == '__main__':
+    main()
