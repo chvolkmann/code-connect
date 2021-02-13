@@ -26,10 +26,12 @@ code-connect () {
     echo ""
     echo "  ${magenta}code .${reset}"
 }
+
 code-disconnect () {
     unset VSCODE_IPC_HOOK_CLI
     unalias code
 }
+
 deactivate () {
     code-disconnect
     unset _CODE_CONNECT_DIR

@@ -1,6 +1,3 @@
-# set HERE (dirname (status --current-filename))
-# alias code-connect="$HERE/code_connect.py | source && echo Connection to VS Code established successfully!"
-
 set _CODE_CONNECT_DIR (dirname (status --current-filename))
 
 set cyan (tput setaf 7)
