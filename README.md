@@ -125,6 +125,13 @@ alias code="/home/user/.vscode-server/bin/622cb03f7e070a9670c94bae1a45d78d7181fb
 
 `code-connect` is an alias sourcing the output of `code_connect.py` into the current shell session.
 
+## [Contributing](./CONTRIBUTING.md)
+
+- Fork the repo
+- Commit your changes to your branch
+- Create a pull request  
+  _Please make sure that [edits to your pull request are permitted](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/allowing-changes-to-a-pull-request-branch-created-from-a-fork)._
+
 ## Changelog
 
 See [CHANGELOG.md](./CHANGELOG.md)
