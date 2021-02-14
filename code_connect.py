@@ -2,11 +2,12 @@
 
 # based on https://stackoverflow.com/a/60949722
 
-from pathlib import Path
-import subprocess as sp
-from typing import Iterable, List, Tuple
 import time
+import subprocess as sp
 import os
+from distutils.spawn import find_executable
+from typing import Iterable, List, Tuple
+from pathlib import Path
 
 MAX_IDLE_TIME = 4 * 60 * 60
 
@@ -38,7 +39,15 @@ def next_open_socket(socks: Iterable[Path]) -> Path:
             'Please make sure to connect to this machine with a standard VS Code remote SSH session before using this tool.'
         )
 
+def check_for_binaries():
+    if find_executable('socat') is None:
+        fail(
+            '"socat" not found in $PATH, but is required for code-connect'
+        )
+
 def main(shell: str = None, max_idle_time: int = MAX_IDLE_TIME):
+    check_for_binaries()
+
     # Determine shell for outputting the proper format
     if not shell:
         shell = os.getenv('SHELL', 'bash')
@@ -62,9 +71,10 @@ def main(shell: str = None, max_idle_time: int = MAX_IDLE_TIME):
 
     code_binary = code_repo / 'bin' / 'code'
 
-    # List all possible sockets
+    # List all possible sockets for the current user
     # Some of these are obsolete and not listening
-    socks = sort_by_access_timestamp(Path('/run/user/1000/').glob('vscode-ipc-*.sock'))
+    uid = os.getuid()
+    socks = sort_by_access_timestamp(Path(f'/run/user/{uid}/').glob('vscode-ipc-*.sock'))
 
     # Only consider the ones that were active N seconds ago
     now = time.time()
