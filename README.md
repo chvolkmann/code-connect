@@ -8,7 +8,7 @@ VS Code supports opening files with the terminal using `code /path/to/file`. Whi
 
 Say, you have just SSH'd into a remote server using your favorite terminal and would like to open a webserver config file in your local VS Code instance. So you type `code nginx.conf`, which doesn't work in this terminal. If you try to run `code nginx.conf` in the integrated terminal however, VS Code opens it the file just fine.
 
-The aim of this project is to make the `code` cli available to _any_ terminal, not only to only VS Code's integrated terminal.
+The aim of this project is to make the `code` cli available to _any_ terminal, not only to VS Code's integrated terminal.
 
 ## Installation
 
@@ -92,7 +92,7 @@ The integrated terminal as well as the WSL terminal spawn an IPC socket. You als
 
 Each time you connect remotely, the VS Code client instructs the server to fetch the newest version of itself. All versions are stored by commit id in `~/.vscode-server/bin`. `code-connect` uses the version that has been most recently accessed. The corresponding binary can be found in `~/.vscode-server/bin/<commid-id>/bin/code`.
 
-A similar method is used to list all of VS Code's IPC sockets, which are located under `/run/user/1000/vscode-ipc-<UUID>.sock`, where `<UUID>` is a unique ID. VS Code does not seem to clean up all stale connections, so some of these sockets are active, some are not.
+A similar method is used to list all of VS Code's IPC sockets, which are located under `/run/user/<userid>/vscode-ipc-<UUID>.sock`, where `<userid>` is the [current user's UID](https://en.wikipedia.org/wiki/User_identifier) and `<UUID>` is a unique ID. VS Code does not seem to clean up all stale connections, so some of these sockets are active, some are not.
 
 So the socket that is listening and that was accessed within a timeframe of 4 hours by default is chosen.
 
