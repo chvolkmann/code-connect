@@ -46,16 +46,8 @@ def check_for_binaries():
             '"socat" not found in $PATH, but is required for code-connect'
         )
 
-def main(shell: str = None, max_idle_time: int = MAX_IDLE_TIME):
+def main(max_idle_time: int = MAX_IDLE_TIME):
     check_for_binaries()
-
-    # Determine shell for outputting the proper format
-    if not shell:
-        shell = os.getenv('SHELL', 'bash')
-    shell_path = Path(shell)
-    if shell_path.exists():
-        # Just get the name of the binary
-        shell = shell_path.name
     
     # Every entry in ~/.vscode-server/bin corresponds to a commit id
     # Pick the most recent one
