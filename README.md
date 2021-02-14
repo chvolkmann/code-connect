@@ -13,7 +13,12 @@ This utility enables you to call `code .` instead, just as you would in a WSL se
 
 ### Requirements
 
-Requires Python 3 and a **Linux** machine you want to connect to. Tested under Python 3.8, but slightly lower should work fine.
+- a **Linux machine** you want to run `code-connect` on
+- **Python 3** - _tested under Python 3.8, but slightly older versions should work fine_
+- **socat** - used for pinging UNIX sockets
+  ```bash
+  apt-get install socat
+  ```
 
 ### VS Code Server
 
