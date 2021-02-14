@@ -88,6 +88,8 @@ def main(shell: str = None, max_idle_time: int = MAX_IDLE_TIME):
     args[0] = code_binary
 
     os.environ["VSCODE_IPC_HOOK_CLI"] = str(ipc_sock)
+    # execute the "code" binary with the proper environment variable set
+    # stdout/stderr remain connected to the current process
     proc = sp.run(args)
     exit(proc.returncode)
 

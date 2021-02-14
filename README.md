@@ -34,7 +34,7 @@ If you are familiar with `virtualenv`, `conda`, etc., this will be familiar.
 Execute this and place it in your `.bashrc`
 
 ```bash
-source activate.sh
+alias code="/path/to/code_connect.py"
 ```
 
 #### Fish
@@ -49,41 +49,11 @@ If you want to do it manually, execute this and place it in your `config.fish`
 
 ```fish
 function code
-  ~/.local/share/code-connect/code_connect.py $argv
+  /path/to/code_connect.py $argv
 end
 ```
 
 ## Usage
-
-First, run
-
-```bash
-code-connect
-```
-
-This will provide you with the `code` command from your server's VS Code Server installation. It also sets the environment variable `VSCODE_IPC_HOOK_CLI` to a valid IPC socket.
-
-Then you're free to use
-
-```bash
-code /path/to/file
-```
-
-Note that you need to have an active instance of VS Code running.
-
-### Deactivating
-
-To unlink the `code` executable and unset the environment variable, use
-
-```bash
-code-disconnect
-```
-
-And to disable `code-connect` and unset the aliases, use
-
-```bash
-deactivate
-```
 
 ## How it works
 
@@ -116,16 +86,8 @@ socat -u OPEN:/dev/null UNIX-CONNECT:/path/to/socket
 
 This returns `0` if and only if there's something listening.
 
-The script `code_connect.py` does all of the above steps and outputs a string to stdout. Currently, output for **bash** and **fish** is supported.
-
-Sample output (bash):
-
-```bash
-export VSCODE_IPC_HOOK_CLI="/run/user/1000/vscode-ipc-dd85cff3-04c7-4ca6-9c06-229acd73008c.sock"
-alias code="/home/user/.vscode-server/bin/622cb03f7e070a9670c94bae1a45d78d7181fbd4/bin/code"
-```
-
-`code-connect` is an alias sourcing the output of `code_connect.py` into the current shell session.
+The script `code_connect.py` does all of the above steps executes the VS Code "code" binary
+as a child process with the proper `VSCODE_IPC_HOOK_CLI` environment variable set.
 
 ## Changelog
 
