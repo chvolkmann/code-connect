@@ -120,6 +120,10 @@ alias code="/home/user/.vscode-server/bin/622cb03f7e070a9670c94bae1a45d78d7181fb
 
 `code-connect` is an alias sourcing the output of `code_connect.py` into the current shell session.
 
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md)
+
 ## Credit
 
 - Based on an [answer on StackOverflow](https://stackoverflow.com/a/60949722) by [stabledog](https://stackoverflow.com/users/237059/Stabledog)
