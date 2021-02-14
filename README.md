@@ -48,7 +48,9 @@ fisher install chvolkmann/code-connect-fish-plugin
 If you want to do it manually, execute this and place it in your `config.fish`
 
 ```fish
-source activate.fish
+function code
+  ~/.local/share/code-connect/code_connect.py $argv
+end
 ```
 
 ## Usage

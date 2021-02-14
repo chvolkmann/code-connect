@@ -8,6 +8,7 @@ import os
 from distutils.spawn import find_executable
 from typing import Iterable, List, Tuple
 from pathlib import Path
+import sys
 
 MAX_IDLE_TIME = 4 * 60 * 60
 
@@ -83,21 +84,12 @@ def main(shell: str = None, max_idle_time: int = MAX_IDLE_TIME):
     # Find the first socket that is open, most recently accessed first
     ipc_sock = next_open_socket(socks)
 
-    # Output a shell string to stdout
-    if shell == 'fish':
-        source_lines = [
-            f'# fish usage: ./code_connect.py | source',
-            f'export VSCODE_IPC_HOOK_CLI="{ipc_sock}"',
-            f'alias code="{code_binary}"'
-        ]
-    else:
-        source_lines = [
-            f'# bash usage: ./code_connect.py | eval',
-            f'export VSCODE_IPC_HOOK_CLI="{ipc_sock}"',
-            f'alias code="{code_binary}"'
-        ]
+    args = sys.argv.copy()
+    args[0] = code_binary
 
-    print('\n'.join(source_lines))
+    os.environ["VSCODE_IPC_HOOK_CLI"] = str(ipc_sock)
+    proc = sp.run(args)
+    exit(proc.returncode)
 
 if __name__ == '__main__':
     main()
