@@ -1,17 +1,18 @@
 # code-connect
 
-Open a file in your locally running VS Code instance from any terminal.
+Open a file in your locally running Visual Studio Code instance from arbitrary terminal connections.
 
 ## Motivation
 
-VS Code supports opening files with the terminal using `code /path/to/file`. While this is possible in **WSL sessions** and **remote SSH sessions** if the integrated terminal is used, it is currently not possible for arbitrary terminals. Say, you have just SSH'd into a remote server using your favorite terminal and would like to open a webserver config file in your local VS Code instance.
+VS Code supports opening files with the terminal using `code /path/to/file`. While this is possible in [WSL sessions](https://code.visualstudio.com/docs/remote/wsl) and [remote SSH sessions](https://code.visualstudio.com/docs/remote/ssh) if the integrated terminal is used, it is currently not possible for arbitrary terminals.
 
-You would have to get to VS Code, connect to your server through a remote session and find the file in VS Code's file browser.  
-This utility enables you to call `code .` instead, just as you would in a WSL session.
+Say, you have just SSH'd into a remote server using your favorite terminal and would like to open a webserver config file in your local VS Code instance. So you type `code nginx.conf`, which doesn't work in this terminal. If you try to run `code nginx.conf` in the integrated terminal however, VS Code opens it the file just fine.
+
+The aim of this project is to make the `code` cli available to _any_ terminal, not only to only VS Code's integrated terminal.
 
 ## Installation
 
-### Requirements
+### Prerequisites
 
 - a **Linux machine** you want to run `code-connect` on
 - **Python 3** - _tested under Python 3.8, but slightly older versions should work fine_
@@ -22,7 +23,7 @@ This utility enables you to call `code .` instead, just as you would in a WSL se
 
 ### VS Code Server
 
-You need to set up VS Code Server before using this utility. For this, connect to your target in a remote SSH session.  
+You need to set up VS Code Server before using this utility. For this, [connect to your target in a remote SSH session](https://code.visualstudio.com/docs/remote/ssh).  
 Afterwards, you should have a folder `.vscode-server` in your home directory.
 
 ### Shell Integration
