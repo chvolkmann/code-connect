@@ -41,7 +41,7 @@ def next_open_socket(socks: Iterable[Path]) -> Path:
         )
 
 def check_for_binaries():
-    if find_executable('socat') is None:
+    if not find_executable('socat'):
         fail(
             '"socat" not found in $PATH, but is required for code-connect'
         )
@@ -78,11 +78,13 @@ def main(max_idle_time: int = MAX_IDLE_TIME):
 
     args = sys.argv.copy()
     args[0] = code_binary
+    os.environ['VSCODE_IPC_HOOK_CLI'] = str(ipc_sock)
 
-    os.environ["VSCODE_IPC_HOOK_CLI"] = str(ipc_sock)
     # execute the "code" binary with the proper environment variable set
     # stdout/stderr remain connected to the current process
     proc = sp.run(args)
+
+    # return the same exit code as the wrapped code process
     exit(proc.returncode)
 
 if __name__ == '__main__':
