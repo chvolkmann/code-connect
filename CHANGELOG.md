@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.1] - 2021-02-15
 
-- Integrates #3
+- Integrates [#4](https://github.com/chvolkmann/code-connect/pull/4)
 
 ### Changed
 
@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0] - 2021-02-15
 
-- Integrates #2
+- Integrates [#2](https://github.com/chvolkmann/code-connect/pull/2)
 
 ### Changed
 
@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.1] - 2021-02-14
 
-- Integrates #1
+- Integrates [#1](https://github.com/chvolkmann/code-connect/pull/1)
 
 ### Fixed
 
