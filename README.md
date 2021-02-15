@@ -1,5 +1,7 @@
 # code-connect
 
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/chvolkmann/code-connect?label=version&style=flat-square)
+
 Open a file in your locally running Visual Studio Code instance from arbitrary terminal connections.
 
 ## Motivation
