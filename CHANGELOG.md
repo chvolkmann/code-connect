@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Code styling with black, isort and flake8
+- Poetry for managing code style dev dependencies
+
 ## [0.2.1] - 2021-02-15
 
 - Integrates [#4](https://github.com/chvolkmann/code-connect/pull/4)
