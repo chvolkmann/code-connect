@@ -11,8 +11,8 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@2
-      
+      - uses: actions/checkout@v2
+
       - name: Restore dependencies
         uses: actions/cache@v2
         with:
@@ -37,7 +37,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@2
+      - uses: actions/checkout@v2
       - name: Restore dependencies
         uses: actions/cache@v2
         with:
@@ -55,7 +55,7 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@2
+      - uses: actions/checkout@v2
       - name: Restore dependencies
         uses: actions/cache@v2
         with:
