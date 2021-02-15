@@ -62,6 +62,19 @@ black = "*"
 flake8 = ">=3.0.0"
 
 [[package]]
+name = "isort"
+version = "5.7.0"
+description = "A Python utility / library to sort Python imports."
+category = "dev"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[package.extras]
+pipfile_deprecated_finder = ["pipreqs", "requirementslib"]
+requirements_deprecated_finder = ["pipreqs", "pip-api"]
+colors = ["colorama (>=0.4.3,<0.5.0)"]
+
+[[package]]
 name = "mccabe"
 version = "0.6.1"
 description = "McCabe checker, plugin for flake8"
@@ -136,7 +149,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = '^3.8'
-content-hash = "5c0fc2e416f19f6c96753999f1de901ed7937d769ced544162092eaed861d27c"
+content-hash = "61c42d6c64b41cfb41fb231c20f971cf75968cfd00c9721f6e318e93df377d99"
 
 [metadata.files]
 appdirs = [
@@ -156,6 +169,10 @@ flake8 = [
 ]
 flake8-black = [
     {file = "flake8-black-0.2.1.tar.gz", hash = "sha256:f26651bc10db786c03f4093414f7c9ea982ed8a244cec323c984feeffdf4c118"},
+]
+isort = [
+    {file = "isort-5.7.0-py3-none-any.whl", hash = "sha256:fff4f0c04e1825522ce6949973e83110a6e907750cd92d128b0d14aaaadbffdc"},
+    {file = "isort-5.7.0.tar.gz", hash = "sha256:c729845434366216d320e936b8ad6f9d681aab72dc7cbc2d51bedc3582f3ad1e"},
 ]
 mccabe = [
     {file = "mccabe-0.6.1-py2.py3-none-any.whl", hash = "sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42"},
