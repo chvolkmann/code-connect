@@ -10,6 +10,7 @@ FROM python:3.8
 RUN mkdir /app
 WORKDIR /app
 
-RUN pip install flake8 black isort
+# Install poetry
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 
-CMD ["make"]
+CMD ["poetry", "--version"]

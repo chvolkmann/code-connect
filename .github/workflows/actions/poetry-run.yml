@@ -1,0 +1,10 @@
+name: 'Run with Poetry'
+
+inputs:
+  cmd:
+    required: true
+    description: Will be passed directly to `poetry run`
+
+runs:
+  using: docker
+  image: ../../Dockerfile
