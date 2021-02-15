@@ -1,0 +1,36 @@
+name: Code Style Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  setup:
+    name: Setup up dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install dependencies
+        run: pip install flake8 black isort
+  lint:
+    name: Linter
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - run: flake8 .
+  format:
+    name: Formatters
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - run: black .
+      - run: isort .
+
+  
