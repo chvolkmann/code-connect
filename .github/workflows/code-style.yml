@@ -1,0 +1,16 @@
+name: Code Style
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs:
+      using: docker
+      image: Dockerfile
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Lint
+        run: make lint
