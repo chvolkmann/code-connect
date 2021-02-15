@@ -14,4 +14,4 @@ WORKDIR /app
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - && \
     ln -s $HOME/.poetry/bin/poetry /usr/bin/poetry
 
-CMD ["bash", "-lc"]
+CMD ["/usr/bin/poetry"]

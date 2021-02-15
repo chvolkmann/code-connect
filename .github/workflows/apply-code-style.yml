@@ -7,67 +7,38 @@ on:
       - dev
 
 jobs:
-  setup:
-    name: Setup
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: Restore dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: venv-${{ hashFiles('poetry.lock') }}
-          restore-keys: venv-
-
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.1.1
 
       - name: Install dependencies
-        uses: ./.github/actions/run-in-container
-        with:
-          cmd: poetry install
-
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: venv-${{ hashFiles('poetry.lock') }}
-          restore-keys: venv-
-  lint:
-    name: Linting
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Restore dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: venv-${{ hashFiles('poetry.lock') }}
-          restore-keys: venv-
+        run: poetry install
 
       - name: flake8
-        uses: ./.github/actions/run-in-container
-        with:
-          cmd: poetry run flake8 .
+        run: poetry run flake8 .
 
   format:
-    name: Formatting
-    needs: lint
+    name: Format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Restore dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: venv-${{ hashFiles('poetry.lock') }}
-          restore-keys: venv-
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.1.1
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: flake8
+        run: poetry run flake8
 
       - name: black
-        uses: ./.github/actions/run-in-container
-        with:
-          cmd: poetry run black .
+        run: poetry run black .
+
       - name: isort
-        uses: ./.github/actions/run-in-container
-        with:
-          cmd: poetry run isort .
+        run: poetry run isort .
