@@ -19,15 +19,32 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Restore poetry
+        id: restore-poetry
+        uses: actions/cache@v2
+        with:
+          path: ~/.poetry
+          key: poetry-${{ hashFiles('poetry.lock') }}${{ hashFiles('~/.poetry/lib/poetry/__version__.py') }}
+          restore-keys:
+            - poetry-
       - name: Set up poetry
+        if: steps.restore-poetry.outputs.cache_hit != 'true'
         uses: Gr1N/setup-poetry@v4
       - name: Cache poetry
         uses: actions/cache@v2
         with:
           path: ~/.poetry
           key: poetry-${{ hashFiles('poetry.lock') }}${{ hashFiles('~/.poetry/lib/poetry/__version__.py') }}
-          restore-key: poetry-
+          restore-keys:
+            - poetry-
      
+      - name: Restore dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: venv-${{ hashFiles('poetry.lock') }}
+          restore-keys:
+            - venv-
       - name: Install dependencies
         run: poetry install
       - name: Cache dependencies
@@ -35,22 +52,53 @@ jobs:
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: venv-${{ hashFiles('poetry.lock') }}
-          restore-key: venv-
+          restore-keys:
+            - venv-
         
   lint:
     name: Linting
     needs: setup
     runs-on: ubuntu-latest
     steps:
+      - name: Restore poetry
+        uses: actions/cache@v2
+        with:
+          path: ~/.poetry
+          key: poetry-${{ hashFiles('poetry.lock') }}${{ hashFiles('~/.poetry/lib/poetry/__version__.py') }}
+          restore-keys:
+            - poetry-
+      - name: Restore dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: venv-${{ hashFiles('poetry.lock') }}
+          restore-keys:
+            - venv-
+
       - name: flake8
-        run: poetry run flake8 .
+        run: ~/.poetry/bin/poetry run flake8 .
 
   format:
     name: Formatting
     needs: lint
     runs-on: ubuntu-latest
     steps:
+      - name: Restore poetry
+        uses: actions/cache@v2
+        with:
+          path: ~/.poetry
+          key: poetry-${{ hashFiles('poetry.lock') }}${{ hashFiles('~/.poetry/lib/poetry/__version__.py') }}
+          restore-keys:
+            - poetry-
+      - name: Restore dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: venv-${{ hashFiles('poetry.lock') }}
+          restore-keys:
+            - venv-
+
       - name: black
-        run: poetry run black .
+        run: ~/.poetry/bin/poetry run black .
       - name: isort 
-        run: poetry run isort .
+        run: ~/.poetry/bin/poetry run isort .
