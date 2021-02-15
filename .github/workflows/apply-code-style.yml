@@ -7,8 +7,8 @@ on:
       - dev
 
 jobs:
-  setup:
-    name: Setup up dependencies
+  code-pipeline:
+    name: Linter+Formatter
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -19,8 +19,6 @@ jobs:
           python-version: '3.x'
       - name: Set up Poetry
         uses: Gr1N/setup-poetry@v4
-      - name: Install dependencies
-        run: poetry install
       - name: Cache packages
         uses: actions/cache@v2
         with:
@@ -28,21 +26,9 @@ jobs:
             ~/.poetry
             ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
-      - run: ls -hal ~
-      - run: poetry
-  lint:
-    name: Linter
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - run: ls -hal ~
-      - run: ~/.poetry/bin/poetry run flake8
-  format:
-    name: Formatters
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - run: ~/.poetry/bin/poetry run black .
-      - run: ~/.poetry/bin/poetry run isort .
-
-  
+      - name: Install dependencies
+        run: poetry install
+      - name: Run Formatter
+        run: poetry run black . && poetry run isort .
+      - name: Run linter
+        run: poetry run flake8 .
