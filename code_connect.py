@@ -8,6 +8,7 @@ import os
 from distutils.spawn import find_executable
 from typing import Iterable, List, Tuple
 from pathlib import Path
+import sys
 
 MAX_IDLE_TIME = 4 * 60 * 60
 
@@ -40,22 +41,12 @@ def next_open_socket(socks: Iterable[Path]) -> Path:
         )
 
 def check_for_binaries():
-    if find_executable('socat') is None:
+    if not find_executable('socat'):
         fail(
             '"socat" not found in $PATH, but is required for code-connect'
         )
 
-def main(shell: str = None, max_idle_time: int = MAX_IDLE_TIME):
-    check_for_binaries()
-
-    # Determine shell for outputting the proper format
-    if not shell:
-        shell = os.getenv('SHELL', 'bash')
-    shell_path = Path(shell)
-    if shell_path.exists():
-        # Just get the name of the binary
-        shell = shell_path.name
-    
+def get_code_binary() -> Path:
     # Every entry in ~/.vscode-server/bin corresponds to a commit id
     # Pick the most recent one
     code_repos = sort_by_access_timestamp(Path.home().glob('.vscode-server/bin/*'))
@@ -68,11 +59,11 @@ def main(shell: str = None, max_idle_time: int = MAX_IDLE_TIME):
         )
 
     _, code_repo = code_repos[0]
+    return code_repo / 'bin' / 'code'
 
-    code_binary = code_repo / 'bin' / 'code'
-
+def get_ipc_socket(max_idle_time: int = MAX_IDLE_TIME) -> Path:
     # List all possible sockets for the current user
-    # Some of these are obsolete and not listening
+    # Some of these are obsolete and not actively listening anymore
     uid = os.getuid()
     socks = sort_by_access_timestamp(Path(f'/run/user/{uid}/').glob('vscode-ipc-*.sock'))
 
@@ -81,23 +72,26 @@ def main(shell: str = None, max_idle_time: int = MAX_IDLE_TIME):
     socks = [sock for ts, sock in socks if now - ts <= max_idle_time]
 
     # Find the first socket that is open, most recently accessed first
-    ipc_sock = next_open_socket(socks)
+    return next_open_socket(socks)
 
-    # Output a shell string to stdout
-    if shell == 'fish':
-        source_lines = [
-            f'# fish usage: ./code_connect.py | source',
-            f'export VSCODE_IPC_HOOK_CLI="{ipc_sock}"',
-            f'alias code="{code_binary}"'
-        ]
-    else:
-        source_lines = [
-            f'# bash usage: ./code_connect.py | eval',
-            f'export VSCODE_IPC_HOOK_CLI="{ipc_sock}"',
-            f'alias code="{code_binary}"'
-        ]
+def main(max_idle_time: int = MAX_IDLE_TIME):
+    check_for_binaries()
 
-    print('\n'.join(source_lines))
+    # Fetch the path of the "code" executable
+    # and determine an active IPC socket to use
+    code_binary = get_code_binary()
+    ipc_socket = get_ipc_socket()
+
+    args = sys.argv.copy()
+    args[0] = str(code_binary)
+    os.environ['VSCODE_IPC_HOOK_CLI'] = str(ipc_socket)
+
+    # run the "code" executable with the proper environment variable set
+    # stdout/stderr remain connected to the current process
+    proc = sp.run(args)
+
+    # return the same exit code as the wrapped process
+    exit(proc.returncode)
 
 if __name__ == '__main__':
     main()

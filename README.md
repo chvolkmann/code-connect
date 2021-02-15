@@ -4,17 +4,18 @@ Open a file in your locally running Visual Studio Code instance from arbitrary t
 
 ## Motivation
 
-VS Code supports opening files with the terminal using `code /path/to/file`. While this is possible in [WSL sessions](https://code.visualstudio.com/docs/remote/wsl) and [remote SSH sessions](https://code.visualstudio.com/docs/remote/ssh) if the integrated terminal is used, it is currently not possible for arbitrary terminals.
+VS Code supports opening files with the terminal using `code /path/to/file`. While this is possible in [WSL sessions](https://code.visualstudio.com/docs/remote/wsl) and [remote SSH sessions](https://code.visualstudio.com/docs/remote/ssh) if the integrated terminal is used, it is currently not possible for arbitrary terminal sessions.
 
 Say, you have just SSH'd into a remote server using your favorite terminal and would like to open a webserver config file in your local VS Code instance. So you type `code nginx.conf`, which doesn't work in this terminal. If you try to run `code nginx.conf` in the integrated terminal however, VS Code opens it the file just fine.
 
 The aim of this project is to make the `code` cli available to _any_ terminal, not only to VS Code's integrated terminal.
 
-## Installation
+## Prerequisites
 
-### Prerequisites
+- **Linux** - we make assumptions on where VS Code stores it data based on Linux
 
-- a **Linux machine** you want to run `code-connect` on
+  Macs could also support everything out of the box, confirmation needed. Don't hesitate to contact if you have any info on this.
+
 - **Python 3** - _tested under Python 3.8, but slightly older versions should work fine_
 - **socat** - used for pinging UNIX sockets
   ```bash
@@ -26,63 +27,27 @@ The aim of this project is to make the `code` cli available to _any_ terminal, n
 You need to set up VS Code Server before using this utility. For this, [connect to your target in a remote SSH session](https://code.visualstudio.com/docs/remote/ssh).  
 Afterwards, you should have a folder `.vscode-server` in your home directory.
 
-### Shell Integration
-
-If you are familiar with `virtualenv`, `conda`, etc., this will be familiar.
-
-#### Bash
-
-Execute this and place it in your `.bashrc`
-
-```bash
-source activate.sh
-```
-
-#### Fish
-
-Fish users can alternatively install an accompanying [fish plugin](https://github.com/chvolkmann/code-connect-fish-plugin).
-
-```fish
-fisher install chvolkmann/code-connect-fish-plugin
-```
-
-If you want to do it manually, execute this and place it in your `config.fish`
-
-```fish
-source activate.fish
-```
-
 ## Usage
 
-First, run
+Set up an alias for `code`, pointing to `code_connect.py` by placing the following line in your shell's rcfile. That's it, you can now use `code` the usual way.
 
 ```bash
-code-connect
+alias code="/path/to/code_connect.py"
 ```
 
-This will provide you with the `code` command from your server's VS Code Server installation. It also sets the environment variable `VSCODE_IPC_HOOK_CLI` to a valid IPC socket.
+- For **bash**, use `~/.bashrc`.
 
-Then you're free to use
+- For **fish**, use `~/.config/fish/config.fish`.
 
-```bash
-code /path/to/file
-```
+  Fish users can alternatively install a [plugin](https://github.com/chvolkmann/code-connect-fish-plugin) with the [fisher plugin manager](https://github.com/jorgebucaran/fisher).
 
-Note that you need to have an active instance of VS Code running.
+  ```bash
+  fisher install chvolkmann/code-connect-fish-plugin
+  ```
 
-### Deactivating
+## Changelog
 
-To unlink the `code` executable and unset the environment variable, use
-
-```bash
-code-disconnect
-```
-
-And to disable `code-connect` and unset the aliases, use
-
-```bash
-deactivate
-```
+See [CHANGELOG.md](./CHANGELOG.md)
 
 ## How it works
 
@@ -115,16 +80,8 @@ socat -u OPEN:/dev/null UNIX-CONNECT:/path/to/socket
 
 This returns `0` if and only if there's something listening.
 
-The script `code_connect.py` does all of the above steps and outputs a string to stdout. Currently, output for **bash** and **fish** is supported.
-
-Sample output (bash):
-
-```bash
-export VSCODE_IPC_HOOK_CLI="/run/user/1000/vscode-ipc-dd85cff3-04c7-4ca6-9c06-229acd73008c.sock"
-alias code="/home/user/.vscode-server/bin/622cb03f7e070a9670c94bae1a45d78d7181fbd4/bin/code"
-```
-
-`code-connect` is an alias sourcing the output of `code_connect.py` into the current shell session.
+The script `code_connect.py` performs all of the above steps and runs the VS Code `code` executable
+as a child process with `VSCODE_IPC_HOOK_CLI` set properly.
 
 ## [Contributing](./CONTRIBUTING.md)
 
@@ -132,10 +89,6 @@ alias code="/home/user/.vscode-server/bin/622cb03f7e070a9670c94bae1a45d78d7181fb
 - Commit your changes to your branch
 - Create a pull request  
   _Please make sure that [edits to your pull request are permitted](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/allowing-changes-to-a-pull-request-branch-created-from-a-fork)._
-
-## Changelog
-
-See [CHANGELOG.md](./CHANGELOG.md)
 
 ## Credit
 
