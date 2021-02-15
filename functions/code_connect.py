@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# based on https://stackoverflow.com/a/60949722
+# https://github.com/chvolkmann/code-connect
 
 import time
 import subprocess as sp
