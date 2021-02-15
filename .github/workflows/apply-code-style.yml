@@ -39,6 +39,7 @@ jobs:
         
   lint:
     name: Linting
+    needs: setup
     runs-on: ubuntu-latest
     steps:
       - name: flake8
@@ -46,6 +47,7 @@ jobs:
 
   format:
     name: Formatting
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: black
