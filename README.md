@@ -1,19 +1,21 @@
 # code-connect
 
-Open a file in your locally running VS Code instance from any terminal.
+Open a file in your locally running Visual Studio Code instance from arbitrary terminal connections.
 
 ## Motivation
 
-VS Code supports opening files with the terminal using `code /path/to/file`. While this is possible in **WSL sessions** and **remote SSH sessions** if the integrated terminal is used, it is currently not possible for arbitrary terminals. Say, you have just SSH'd into a remote server using your favorite terminal and would like to open a webserver config file in your local VS Code instance.
+VS Code supports opening files with the terminal using `code /path/to/file`. While this is possible in [WSL sessions](https://code.visualstudio.com/docs/remote/wsl) and [remote SSH sessions](https://code.visualstudio.com/docs/remote/ssh) if the integrated terminal is used, it is currently not possible for arbitrary terminal sessions.
 
-You would have to get to VS Code, connect to your server through a remote session and find the file in VS Code's file browser.  
-This utility enables you to call `code .` instead, just as you would in a WSL session.
+Say, you have just SSH'd into a remote server using your favorite terminal and would like to open a webserver config file in your local VS Code instance. So you type `code nginx.conf`, which doesn't work in this terminal. If you try to run `code nginx.conf` in the integrated terminal however, VS Code opens it the file just fine.
 
-## Installation
+The aim of this project is to make the `code` cli available to _any_ terminal, not only to VS Code's integrated terminal.
 
-### Requirements
+## Prerequisites
 
-- a **Linux machine** you want to run `code-connect` on
+- **Linux** - we make assumptions on where VS Code stores it data based on Linux
+
+  Macs could also support everything out of the box, confirmation needed. Don't hesitate to contact if you have any info on this.
+
 - **Python 3** - _tested under Python 3.8, but slightly older versions should work fine_
 - **socat** - used for pinging UNIX sockets
   ```bash
@@ -22,38 +24,30 @@ This utility enables you to call `code .` instead, just as you would in a WSL se
 
 ### VS Code Server
 
-You need to set up VS Code Server before using this utility. For this, connect to your target in a remote SSH session.  
+You need to set up VS Code Server before using this utility. For this, [connect to your target in a remote SSH session](https://code.visualstudio.com/docs/remote/ssh).  
 Afterwards, you should have a folder `.vscode-server` in your home directory.
 
-### Shell Integration
+## Usage
 
-If you are familiar with `virtualenv`, `conda`, etc., this will be familiar.
-
-#### Bash
-
-Execute this and place it in your `.bashrc`
+Set up an alias for `code`, pointing to `code_connect.py` by placing the following line in your shell's rcfile. That's it, you can now use `code` the usual way.
 
 ```bash
 alias code="/path/to/code_connect.py"
 ```
 
-#### Fish
+- For **bash**, use `~/.bashrc`.
 
-Fish users can alternatively install an accompanying [fish plugin](https://github.com/chvolkmann/code-connect-fish-plugin).
+- For **fish**, use `~/.config/fish/config.fish`.
 
-```fish
-fisher install chvolkmann/code-connect-fish-plugin
-```
+  Fish users can alternatively install a [plugin](https://github.com/chvolkmann/code-connect-fish-plugin) with the [fisher plugin manager](https://github.com/jorgebucaran/fisher).
 
-If you want to do it manually, execute this and place it in your `config.fish`
+  ```bash
+  fisher install chvolkmann/code-connect-fish-plugin
+  ```
 
-```fish
-function code
-  /path/to/code_connect.py $argv
-end
-```
+## Changelog
 
-## Usage
+See [CHANGELOG.md](./CHANGELOG.md)
 
 ## How it works
 
@@ -63,7 +57,7 @@ The integrated terminal as well as the WSL terminal spawn an IPC socket. You als
 
 Each time you connect remotely, the VS Code client instructs the server to fetch the newest version of itself. All versions are stored by commit id in `~/.vscode-server/bin`. `code-connect` uses the version that has been most recently accessed. The corresponding binary can be found in `~/.vscode-server/bin/<commid-id>/bin/code`.
 
-A similar method is used to list all of VS Code's IPC sockets, which are located under `/run/user/1000/vscode-ipc-<UUID>.sock`, where `<UUID>` is a unique ID. VS Code does not seem to clean up all stale connections, so some of these sockets are active, some are not.
+A similar method is used to list all of VS Code's IPC sockets, which are located under `/run/user/<userid>/vscode-ipc-<UUID>.sock`, where `<userid>` is the [current user's UID](https://en.wikipedia.org/wiki/User_identifier) and `<UUID>` is a unique ID. VS Code does not seem to clean up all stale connections, so some of these sockets are active, some are not.
 
 So the socket that is listening and that was accessed within a timeframe of 4 hours by default is chosen.
 
@@ -86,12 +80,15 @@ socat -u OPEN:/dev/null UNIX-CONNECT:/path/to/socket
 
 This returns `0` if and only if there's something listening.
 
-The script `code_connect.py` does all of the above steps executes the VS Code "code" binary
-as a child process with the proper `VSCODE_IPC_HOOK_CLI` environment variable set.
+The script `code_connect.py` performs all of the above steps and runs the VS Code `code` executable
+as a child process with `VSCODE_IPC_HOOK_CLI` set properly.
 
-## Changelog
+## [Contributing](./CONTRIBUTING.md)
 
-See [CHANGELOG.md](./CHANGELOG.md)
+- Fork the repo
+- Commit your changes to your branch
+- Create a pull request  
+  _Please make sure that [edits to your pull request are permitted](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/allowing-changes-to-a-pull-request-branch-created-from-a-fork)._
 
 ## Credit
 
