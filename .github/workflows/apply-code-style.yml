@@ -25,8 +25,7 @@ jobs:
         with:
           path: ~/.poetry
           key: poetry-${{ hashFiles('poetry.lock') }}${{ hashFiles('~/.poetry/lib/poetry/__version__.py') }}
-          restore-keys:
-            - poetry-
+          restore-keys: poetry-
       - name: Set up poetry
         if: steps.restore-poetry.outputs.cache_hit != 'true'
         uses: Gr1N/setup-poetry@v4
