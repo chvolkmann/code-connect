@@ -29,7 +29,7 @@ Afterwards, you should have a folder `.vscode-server` in your home directory.
 
 ## Usage
 
-Set up an alias for `code`, pointing to `code_connect.py` by placing the following line in your shell's rcfile. That's it, you can now use `code` the usual way.
+Set up an alias for `code`, pointing to [`code_connect.py`](./functions/code_connect.py) by placing the following line in your shell's rcfile. That's it, you can now use `code` the usual way.
 
 ```bash
 alias code="/path/to/code_connect.py"
@@ -37,12 +37,12 @@ alias code="/path/to/code_connect.py"
 
 - For **bash**, use `~/.bashrc`.
 
-- For **fish**, use `~/.config/fish/config.fish`.
+- For [**fish**](https://fishshell.com/), use `~/.config/fish/config.fish`.
 
-  Fish users can alternatively install a [plugin](https://github.com/chvolkmann/code-connect-fish-plugin) with the [fisher plugin manager](https://github.com/jorgebucaran/fisher).
+  Fish users can use [fisher](https://github.com/jorgebucaran/fisher) for an automatic install
 
   ```bash
-  fisher install chvolkmann/code-connect-fish-plugin
+  fisher install chvolkmann/code-connect
   ```
 
 ## Changelog
