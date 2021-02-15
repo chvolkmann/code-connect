@@ -51,7 +51,8 @@ def next_open_socket(socks: Sequence[Path]) -> Path:
         fail(
             "Could not find an open VS Code IPC socket.",
             "",
-            "Please make sure to connect to this machine with a standard VS Code remote SSH session before using this tool.",
+            "Please make sure to connect to this machine with a standard "
+            + "VS Code remote SSH session before using this tool.",
         )
 
 
@@ -85,9 +86,7 @@ def get_ipc_socket(max_idle_time: int = DEFAULT_MAX_IDLE_TIME) -> Path:
     # List all possible sockets for the current user
     # Some of these are obsolete and not actively listening anymore
     uid = os.getuid()
-    socks = sort_by_access_timestamp(
-        Path(f"/run/user/{uid}/").glob("vscode-ipc-*.sock")
-    )
+    socks = sort_by_access_timestamp(Path(f"/run/user/{uid}/").glob("vscode-ipc-*.sock"))
 
     # Only consider the ones that were active N seconds ago
     now = time.time()
