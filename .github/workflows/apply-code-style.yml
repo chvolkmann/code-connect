@@ -9,6 +9,7 @@ on:
 jobs:
   setup:
     name: Setup
+    runs-on: ubuntu-latest
     steps:
       - name: Restore dependencies
         uses: actions/cache@v2
@@ -27,6 +28,7 @@ jobs:
   lint:
     name: Linting
     needs: setup
+    runs-on: ubuntu-latest
     steps:
       - name: Restore dependencies
         uses: actions/cache@v2
