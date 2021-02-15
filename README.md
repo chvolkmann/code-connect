@@ -14,7 +14,7 @@ The aim of this project is to make the `code` cli available to _any_ terminal, n
 
 - **Linux** - we make assumptions on where VS Code stores it data based on Linux
 
-  Macs could also support everything out of the box, confirmation needed. Don't hesitate to contact if you have any info on this.
+  > Macs could also support everything out of the box, confirmation needed. Please don't hesitate to come into contact if you have any information to share.
 
 - **Python 3** - _tested under Python 3.8, but slightly older versions should work fine_
 - **socat** - used for pinging UNIX sockets
