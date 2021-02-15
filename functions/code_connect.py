@@ -2,13 +2,13 @@
 
 # https://github.com/chvolkmann/code-connect
 
-import time
-import subprocess as sp
 import os
-from distutils.spawn import find_executable
-from typing import Iterable, Sequence, List, Tuple, NoReturn
-from pathlib import Path
+import subprocess as sp
 import sys
+import time
+from distutils.spawn import find_executable
+from pathlib import Path
+from typing import Iterable, List, NoReturn, Sequence, Tuple
 
 # IPC sockets will be filtered based when they were last accessed
 # This gives an upper bound in seconds to the timestamps
