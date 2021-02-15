@@ -35,13 +35,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: setup
     steps:
-      - run: poetry run flake8
+      - run: ls -hal ~
+      - run: ~/.poetry/bin/poetry run flake8
   format:
     name: Formatters
     runs-on: ubuntu-latest
     needs: lint
     steps:
-      - run: poetry run black .
-      - run: poetry run isort .
+      - run: ~/.poetry/bin/poetry run black .
+      - run: ~/.poetry/bin/poetry run isort .
 
   
