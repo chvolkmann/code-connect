@@ -11,14 +11,21 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@2
+      
       - name: Restore dependencies
         uses: actions/cache@v2
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: venv-${{ hashFiles('poetry.lock') }}
           restore-keys: venv-
+
+
       - name: Install dependencies
-        run: poetry install
+        uses: ./.github/actions/run-in-container
+        with:
+          cmd: poetry install
+
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
@@ -30,6 +37,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@2
       - name: Restore dependencies
         uses: actions/cache@v2
         with:
@@ -38,15 +46,16 @@ jobs:
           restore-keys: venv-
 
       - name: flake8
-        uses: ./actions/poetry-run
+        uses: ./.github/actions/run-in-container
         with:
-          cmd: flake8 .
+          cmd: poetry run flake8 .
 
   format:
     name: Formatting
     needs: lint
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@2
       - name: Restore dependencies
         uses: actions/cache@v2
         with:
@@ -55,10 +64,10 @@ jobs:
           restore-keys: venv-
 
       - name: black
-        uses: ./actions/poetry-run
+        uses: ./.github/actions/run-in-container
         with:
-          cmd: black .
+          cmd: poetry run black .
       - name: isort
-        uses: ./actions/poetry-run
+        uses: ./.github/actions/run-in-container
         with:
-          cmd: isort .
+          cmd: poetry run isort .

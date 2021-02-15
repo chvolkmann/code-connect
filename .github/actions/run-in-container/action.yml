@@ -1,0 +1,14 @@
+name: 'Run in container'
+
+inputs:
+  cmd:
+    required: true
+    description: Will be executed in a shell
+
+runs:
+  using: docker
+  image: ./Dockerfile
+  entrypoint: [bash]
+  args:
+    - -lc
+    - ${{ inputs.cmd }}
