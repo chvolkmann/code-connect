@@ -1,6 +1,11 @@
 name: Code Style Pipeline
 
 on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
   push:
     branches:
       - main
@@ -41,7 +46,7 @@ jobs:
         run: poetry install
 
       - name: black
-        run: poetry run black --check .
+        run: poetry run black --diff --check .
 
       - name: isort
         run: poetry run isort --check .

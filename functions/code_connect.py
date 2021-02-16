@@ -6,8 +6,8 @@ import os
 import subprocess as sp
 import sys
 import time
-from distutils.spawn import find_executable
 from pathlib import Path
+from distutils.spawn import find_executable
 from typing import Iterable, List, NoReturn, Sequence, Tuple
 
 # IPC sockets will be filtered based when they were last accessed
