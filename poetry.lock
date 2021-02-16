@@ -50,18 +50,6 @@ pycodestyle = ">=2.6.0a1,<2.7.0"
 pyflakes = ">=2.2.0,<2.3.0"
 
 [[package]]
-name = "flake8-black"
-version = "0.2.1"
-description = "flake8 plugin to call black as a code style validator"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-black = "*"
-flake8 = ">=3.0.0"
-
-[[package]]
 name = "isort"
 version = "5.7.0"
 description = "A Python utility / library to sort Python imports."
@@ -148,8 +136,8 @@ python-versions = "*"
 
 [metadata]
 lock-version = "1.1"
-python-versions = '^3.8'
-content-hash = "61c42d6c64b41cfb41fb231c20f971cf75968cfd00c9721f6e318e93df377d99"
+python-versions = "^3.8"
+content-hash = "bbfd2fbee47be3524380a44f4b0b78b69a0a5efbb1f4f3087999cae5c1c8794c"
 
 [metadata.files]
 appdirs = [
@@ -166,9 +154,6 @@ click = [
 flake8 = [
     {file = "flake8-3.8.4-py2.py3-none-any.whl", hash = "sha256:749dbbd6bfd0cf1318af27bf97a14e28e5ff548ef8e5b1566ccfb25a11e7c839"},
     {file = "flake8-3.8.4.tar.gz", hash = "sha256:aadae8761ec651813c24be05c6f7b4680857ef6afaae4651a4eccaef97ce6c3b"},
-]
-flake8-black = [
-    {file = "flake8-black-0.2.1.tar.gz", hash = "sha256:f26651bc10db786c03f4093414f7c9ea982ed8a244cec323c984feeffdf4c118"},
 ]
 isort = [
     {file = "isort-5.7.0-py3-none-any.whl", hash = "sha256:fff4f0c04e1825522ce6949973e83110a6e907750cd92d128b0d14aaaadbffdc"},
