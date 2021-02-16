@@ -30,7 +30,12 @@ You need to set up VS Code Server before using this utility. For this, [connect 
 Afterwards, you should have a folder `.vscode-server` in your home directory.
 
 ## Installation
-
+### [Fish](https://fishshell.com/)
+With [fisher](https://github.com/jorgebucaran/fisher)
+```fish
+fisher install chvolkmann/code-connect
+```
+This downloads [`code_connect.py`](./functions/code_connect.py) and set up an alias for you. See [`functions/code.fish`](./functions/code.fish)
 ### Bash
 ```bash
 wget https://raw.githubusercontent.com/chvolkmann/code-connect/main/install.sh | bash
@@ -39,13 +44,6 @@ wget https://raw.githubusercontent.com/chvolkmann/code-connect/main/install.sh |
 This downloads [`code_connect.py`](./functions/code_connect.py) and set up an alias for you. See [`install.sh`](./install.sh).
 
 To uninstall, delete the alias from you `~/.bashrc` and remove `~/.code-connect`.
-
-### [Fish](https://fishshell.com/)
-Using [fisher](https://github.com/jorgebucaran/fisher)
-```fish
-fisher install chvolkmann/code-connect
-```
-This downloads [`code_connect.py`](./functions/code_connect.py) and set up an alias for you. See [`functions/code.fish`](./functions/code.fish)
 
 ### Manually
 
