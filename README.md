@@ -35,13 +35,13 @@ With [fisher](https://github.com/jorgebucaran/fisher)
 ```fish
 fisher install chvolkmann/code-connect
 ```
-This downloads [`code_connect.py`](./functions/code_connect.py) and set up an alias for you. See [`functions/code.fish`](./functions/code.fish)
+This downloads [`code_connect.py`](./functions/code_connect.py) and sets up an alias for you. See [`functions/code.fish`](./functions/code.fish)
 ### Bash
 ```bash
 wget https://raw.githubusercontent.com/chvolkmann/code-connect/main/install.sh | bash
 ```
 
-This downloads [`code_connect.py`](./functions/code_connect.py) and set up an alias for you. See [`install.sh`](./install.sh).
+This downloads [`code_connect.py`](./functions/code_connect.py) and sets up an alias for you. See [`install.sh`](./install.sh).
 
 To uninstall, delete the alias from you `~/.bashrc` and remove `~/.code-connect`.
 
