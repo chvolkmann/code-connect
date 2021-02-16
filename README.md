@@ -38,7 +38,7 @@ fisher install chvolkmann/code-connect
 This downloads [`code_connect.py`](./functions/code_connect.py) and sets up an alias for you. See [`functions/code.fish`](./functions/code.fish)
 ### Bash
 ```bash
-wget https://raw.githubusercontent.com/chvolkmann/code-connect/main/install.sh | source
+wget https://raw.githubusercontent.com/chvolkmann/code-connect/main/install.sh | eval
 ```
 
 This downloads [`code_connect.py`](./functions/code_connect.py) and sets up an alias for you. See [`install.sh`](./install.sh).
