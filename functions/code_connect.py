@@ -43,7 +43,7 @@ def sort_by_access_timestamp(paths: Iterable[Path]) -> List[Tuple[float, Path]]:
     return paths
 
 
-def next_open_socket(socks: Sequence[Path]) -> Path:
+def next_open_socket(socks: Sequence[Path] ) -> Path:
     """ Iterates over the list and returns the first socket that is listening. """
     try:
         return next((sock for sock in socks if is_socket_open(sock)))
@@ -52,7 +52,7 @@ def next_open_socket(socks: Sequence[Path]) -> Path:
             "Could not find an open VS Code IPC socket.",
             "",
             "Please make sure to connect to this machine with a standard "
-            + "VS Code remote SSH session before using this tool.",
+            + "VS Code remote SSH session before using this tool."   ,
         )
 
 
