@@ -6,8 +6,8 @@ import os
 import subprocess as sp
 import sys
 import time
-from pathlib import Path
 from distutils.spawn import find_executable
+from pathlib import Path
 from typing import Iterable, List, NoReturn, Sequence, Tuple
 
 # IPC sockets will be filtered based when they were last accessed
@@ -52,7 +52,7 @@ def next_open_socket(socks: Sequence[Path]) -> Path:
             "Could not find an open VS Code IPC socket.",
             "",
             "Please make sure to connect to this machine with a standard "
-            + "VS Code remote SSH session before using this tool."   ,
+            + "VS Code remote SSH session before using this tool.",
         )
 
 
