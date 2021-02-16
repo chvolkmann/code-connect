@@ -29,23 +29,53 @@ The aim of this project is to make the `code` cli available to _any_ terminal, n
 You need to set up VS Code Server before using this utility. For this, [connect to your target in a remote SSH session](https://code.visualstudio.com/docs/remote/ssh).  
 Afterwards, you should have a folder `.vscode-server` in your home directory.
 
-## Usage
+## Installation
 
-Set up an alias for `code`, pointing to [`code_connect.py`](./functions/code_connect.py) by placing the following line in your shell's rcfile. That's it, you can now use `code` the usual way.
+### Bash
+```bash
+wget https://raw.githubusercontent.com/chvolkmann/code-connect/main/install.sh | bash
+```
+
+This downloads [`code_connect.py`](./functions/code_connect.py) and set up an alias for you. See [`install.sh`](./install.sh).
+
+To uninstall, delete the alias from you `~/.bashrc` and remove `~/.code-connect`.
+
+### [Fish](https://fishshell.com/)
+Using [fisher](https://github.com/jorgebucaran/fisher)
+```fish
+fisher install chvolkmann/code-connect
+```
+This downloads [`code_connect.py`](./functions/code_connect.py) and set up an alias for you. See [`functions/code.fish`](./functions/code.fish)
+
+### Manually
+
+Set up an alias for `code`, pointing to [`code_connect.py`](./functions/code_connect.py) by placing the following line in your shell's rcfile (bash: `~/.bashrc`, fish: `~/.config/fish/fuctions/code.fish`).
 
 ```bash
 alias code="/path/to/code_connect.py"
 ```
 
-- For **bash**, use `~/.bashrc`.
+## Usage
+Just use `code` like you normally would!
 
-- For [**fish**](https://fishshell.com/), use `~/.config/fish/config.fish`.
+```
+Usage: code [options][paths...]
 
-  Fish users can use [fisher](https://github.com/jorgebucaran/fisher) for an automatic install
+To read from stdin, append '-' (e.g. 'ps aux | grep code | code -')
 
-  ```bash
-  fisher install chvolkmann/code-connect
-  ```
+Options
+  -d --diff <file> <file>           Compare two files with each other.
+  -a --add <folder>                 Add folder(s) to the last active window.
+  -g --goto <file:line[:character]> Open a file at the path on the specified line and character position.
+  -n --new-window                   Force to open a new window.
+  -r --reuse-window                 Force to open a file or folder in an already opened window.
+  -w --wait                         Wait for the files to be closed before returning.
+  -h --help                         Print usage.
+
+Troubleshooting
+  -v --version Print version.
+  -s --status  Print process usage and diagnostics information.
+```
 
 ## Changelog
 

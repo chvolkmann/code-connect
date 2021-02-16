@@ -14,7 +14,7 @@ insert_final_newline = true
 charset = utf-8
 
 # 4 space indentation
-[*.{py,toml,fish}]
+[*.{py,toml,sh,fish}]
 charset = utf-8
 indent_style = space
 indent_size = 4
