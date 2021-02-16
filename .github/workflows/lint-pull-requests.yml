@@ -8,23 +8,22 @@ on:
       - synchronize
 
 jobs:
-  setup:
-    name: Setup up dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-      - name: Install dependencies
-        run: pip install flake8 black isort
   lint:
     name: Linter
     runs-on: ubuntu-latest
-    needs: setup
     steps:
-      - run: flake8 .
+      - uses: actions/checkout@v2
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.1.1
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: flake8
+        run: poetry run flake8 .
 
   
