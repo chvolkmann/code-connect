@@ -43,6 +43,8 @@ With [fisher](https://github.com/jorgebucaran/fisher)
 fisher install chvolkmann/code-connect
 ```
 
+This downloads [`code_connect.py`](./functions/code_connect.py) along with two functions. See [`functions/code.fish`](./functions/code.fish) and [`functions/code-connect.fish`](./functions/code-connect.fish)
+
 You can autocomplete the repository name in subsequent commands, e.g. `fisher update code<TAB>`
 
 #### Updating
@@ -56,8 +58,6 @@ fisher update chvolkmann/code-connect
 ```fish
 fisher remove chvolkmann/code-connect
 ```
-
-This downloads [`code_connect.py`](./functions/code_connect.py) along with two functions. See [`functions/code.fish`](./functions/code.fish) and [`functions/code-connect.fish`](./functions/code-connect.fish)
 
 ### Bash
 
