@@ -2,57 +2,43 @@
 
 # https://github.com/chvolkmann/code-connect
 
-
 # Configure this variable to change the install location of code-connect
 CODE_CONNECT_INSTALL_DIR=~/.code-connect
 
 CODE_CONNECT_BASE_URL="https://raw.githubusercontent.com/chvolkmann/code-connect/main"
 
 
+####
 
-cyan=`tput setaf 7`
-red=`tput setaf 1`
-magenta=`tput setaf 6`
-grey=`tput setaf 8`
-green=`tput setaf 10`
-reset=`tput sgr0`
+# Fancy output helpers
 
-color_fg="$cyan"
-color_log="$grey"
-color_error="$red"
-color_emph="$magenta"
-color_file="$green"
+c_cyan=`tput setaf 7`
+c_red=`tput setaf 1`
+c_magenta=`tput setaf 6`
+c_grey=`tput setaf 8`
+c_green=`tput setaf 10`
+c_reset=`tput sgr0`
+
+c_fg="$c_cyan"
+c_log="$c_grey"
+c_err="$c_red"
+c_emph="$c_magenta"
+c_path="$c_green"
 
 print () {
-    echo "$color_fg$@$reset"
+    echo "$c_fg$@$c_reset"
 }
 
 log () {
-    echo "$color_log$@$reset"
+    echo "$c_log$@$c_reset"
 }
 
 error () {
-    echo "$color_error$@$reset"
-}
-
-c_emph () {
-    echo -n "$color_emph$@$color_fg"
-}
-
-c_file () {
-    echo -n "$color_file$@$color_fg"
-}
-
-l_emph () {
-    echo -n "$color_emph$@$color_log"
-}
-
-l_file () {
-    echo -n "$color_file$@$color_log"
+    echo "$c_err$@$c_reset"
 }
 
 
-
+# Helpers
 
 download-repo-file () {
     repo_path="$1"
@@ -60,17 +46,16 @@ download-repo-file () {
     url="$CODE_CONNECT_BASE_URL/$repo_path"
 
     if test "$output_path" != "-"; then
-        log "Downloading $(l_file $repo_path) from $(l_file $url)"
+        log "Downloading ${c_path}$repo_path${c_log} from ${c_path}$url"
     fi
 
-    data=$(curl -sS -o "$output_path" "$url")
+    curl -sS -o "$output_path" "$url"
     ret="$?"
     if test "$ret" != "0"; then
-        error "Could not download $url: curl exited with status code $ret"
-        error $data
+        error "ERROR: Could not fetch ${c_path}$url${c_err}"
+        error "${c_emph}curl${c_err} exited with status code ${c_emph}$ret"
         exit $ret
     fi
-    echo -n $data
 }
 
 alias-exists () {
@@ -82,24 +67,30 @@ ensure-alias () {
     name="$1"
     val="$2"
     if alias-exists "$name"; then
-        log "Alias $(l_emph $name) already registered in $(l_file '~/.bashrc'), skipping"
+        log "Alias ${c_emph}$name${c_log} already registered in ${c_path}~/.bashrc${c_log}, skipping"
     else
         echo "alias $name='$val'" >> ~/.bashrc
-        log "Adding alias $(l_emph $name) to $(l_file '~/.bashrc')"
+        log "Adding alias ${c_emph}$name${c_log} to ${c_path}~/.bashrc"
     fi
 }
 
+
+#####
+
+
 version=$(download-repo-file "VERSION" -)
 print ""
-print "$(c_emph code-connect) ${color_log}v$version"
+print "${c_emph}code-connect ${c_log}v$version"
 print ""
+
+
+# Download the required files from the repository
 
 mkdir -p "$CODE_CONNECT_INSTALL_DIR/lib"
 
 CODE_CONNECT_PY="$CODE_CONNECT_INSTALL_DIR/lib/code_connect.py"
 download-repo-file "functions/code_connect.py" $CODE_CONNECT_PY
 chmod +x "$CODE_CONNECT_PY"
-
 
 mkdir -p "$CODE_CONNECT_INSTALL_DIR/bin"
 
@@ -113,24 +104,27 @@ chmod +x "$CODE_CONNECT_SH"
 
 print ""
 
+
 # Add the aliases to ~/.bashrc if not already done
 ensure-alias "code" "$CODE_SH"
 ensure-alias "code-connect" "$CODE_CONNECT_SH"
 
-print
-print "$(c_emph code-connect) installed to $(c_file $CODE_CONNECT_INSTALL_DIR) successfully!"
+
 print ""
-print "Restart your shell or reload your $(c_file .bashrc) to see the changes."
+print "${c_emph}code-connect${c_fg} installed to ${c_path}$CODE_CONNECT_INSTALL_DIR${c_fg} successfully!"
 print ""
-print "  $(c_emph source) $(c_file '~/.bashrc')"
+print "Restart your shell or reload your ${c_path}.bashrc${c_fg} to see the changes."
 print ""
+print "  ${c_emph}source ${c_path}.bashrc"
+print ""
+
 
 local_code_binary=$(which code)
 if test -z "$local_code_binary"; then
-    print "Local installation of $(c_emph code) detected at $(c_file $local_code_binary)"
-    print "Use the $(c_emph code) executable as you would normally."
-    print "If you want to connect to a remote VS Code session, use $(c_emph code-connect) as a drop-in replacement for $(c_emph code)!"
+    print "Local installation of ${c_emph}code${c_fg} detected at ${c_path}$local_code_binary"
+    print "Use the ${c_emph}code${c_fg} executable as you would normally."
+    print "If you want to connect to a remote VS Code session, use ${c_emph}code-connect${c_fg} as a drop-in replacement for ${c_emph}code${c_fg}!"
 else
-    print "Use the $(c_emph code) executable as you would normally and you will interface with an open VS Code remote session, if available."
-    print "If you want to ${color_error}explicitly${color_fg} connect to a remote VS Code session, use $(c_emph code-connect) as a drop-in replacement for $(c_emph code)!"
+    print "Use the ${c_emph}code${c_fg} executable as you would normally and you will interface with an open VS Code remote session, if available."
+    print "If you want to ${c_err}explicitly${c_fg} connect to a remote VS Code session, use ${c_emph}code-connect${c_fg} as a drop-in replacement for ${c_emph}code${c_fg}!"
 fi
