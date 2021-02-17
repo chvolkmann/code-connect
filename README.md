@@ -30,13 +30,19 @@ You need to set up VS Code Server before using this utility. For this, [connect 
 Afterwards, you should have a folder `.vscode-server` in your home directory.
 
 ## Installation
+
 ### [Fish](https://fishshell.com/)
+
 With [fisher](https://github.com/jorgebucaran/fisher)
+
 ```fish
 fisher install chvolkmann/code-connect
 ```
+
 This downloads [`code_connect.py`](./functions/code_connect.py) and sets up an alias for you. See [`functions/code.fish`](./functions/code.fish)
+
 ### Bash
+
 ```bash
 source <(curl https://raw.githubusercontent.com/chvolkmann/code-connect/main/install.sh)
 ```
@@ -54,6 +60,7 @@ alias code="/path/to/code_connect.py"
 ```
 
 ## Usage
+
 Just use `code` like you normally would!
 
 ```
@@ -115,10 +122,15 @@ as a child process with `VSCODE_IPC_HOOK_CLI` set properly.
 
 ## [Contributing](./CONTRIBUTING.md)
 
-- Fork the repo
-- Commit your changes to your branch
-- Create a pull request  
-  _Please make sure that [edits to your pull request are permitted](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/allowing-changes-to-a-pull-request-branch-created-from-a-fork)._
+- [Fork this repository](https://github.com/chvolkmann/code-connect/fork)
+- Commit changes to your repo
+- _Optional_: Apply code styling
+  - Get [poetry](https://python-poetry.org/)
+  - Run `poetry install` to create a new virtualenv with code style tools
+  - Run `poetry run make code-style` which in turn runs `make code-style` in the virtualenv.  
+    This lints with [flake8](https://github.com/PyCQA/flake8) and applies formatting using [black](https://github.com/psf/black) and [isort](https://github.com/PyCQA/isort).
+- Create a pull request
+  > _Please make sure that [edits to your pull request are permitted](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/allowing-changes-to-a-pull-request-branch-created-from-a-fork)._
 
 ## Credit
 
