@@ -89,7 +89,7 @@ print ""
 mkdir -p "$CODE_CONNECT_INSTALL_DIR/bin"
 
 CODE_CONNECT_PY="$CODE_CONNECT_INSTALL_DIR/bin/code_connect.py"
-download-repo-file "functions/code_connect.py" $CODE_CONNECT_PY
+download-repo-file "bin/code_connect.py" $CODE_CONNECT_PY
 chmod +x "$CODE_CONNECT_PY"
 
 mkdir -p "$CODE_CONNECT_INSTALL_DIR/bin"
