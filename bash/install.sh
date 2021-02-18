@@ -89,16 +89,16 @@ print ""
 mkdir -p "$CODE_CONNECT_INSTALL_DIR/bin"
 
 CODE_CONNECT_PY="$CODE_CONNECT_INSTALL_DIR/bin/code_connect.py"
-download-repo-file "functions/code_connect.py" $CODE_CONNECT_PY
+download-repo-file "bin/code_connect.py" $CODE_CONNECT_PY
 chmod +x "$CODE_CONNECT_PY"
 
-mkdir -p "$CODE_CONNECT_INSTALL_DIR/bin"
+mkdir -p "$CODE_CONNECT_INSTALL_DIR/bash"
 
-CODE_SH="$CODE_CONNECT_INSTALL_DIR/bin/code.sh"
+CODE_SH="$CODE_CONNECT_INSTALL_DIR/bash/code.sh"
 download-repo-file "bash/code.sh" $CODE_SH
 chmod +x "$CODE_SH"
 
-CODE_CONNECT_SH="$CODE_CONNECT_INSTALL_DIR/bin/code-connect.sh"
+CODE_CONNECT_SH="$CODE_CONNECT_INSTALL_DIR/bash/code-connect.sh"
 download-repo-file "bash/code-connect.sh" $CODE_CONNECT_SH
 chmod +x "$CODE_CONNECT_SH"
 
