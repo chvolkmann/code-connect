@@ -1,8 +1,10 @@
 #!/usr/bin/fish
 
+# https://github.com/chvolkmann/code-connect
+
 function _on_code-connect_install --on-event code-connect_install
     mkdir -p ~/.code-connect/bin
-    curl -sS "https://raw.githubusercontent.com/chvolkmann/code-connect/main/bin/code_connect.py" >~/.code-connect/bin/code_connect.py
+    curl -sS "https://raw.githubusercontent.com/chvolkmann/code-connect/chvolkmann/issue9/bin/code_connect.py" >~/.code-connect/bin/code_connect.py
     chmod +x ~/.code-connect/bin/code_connect.py
 end
 
