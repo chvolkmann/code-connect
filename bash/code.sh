@@ -11,5 +11,5 @@ if test -n "$local_code_executable"; then
     $local_code_executable $@
 else
     # code not locally installed, use code-connect
-    code-connect $@
+    ~/.code-connect/bin/code_connect.py $@
 fi
