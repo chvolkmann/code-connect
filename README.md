@@ -85,7 +85,7 @@ Deletes the aliases from `~/.bashrc` and removes the folder `~/.code-connect`
 
 Use `code` as you would normally!
 
-If you have VS Code installed on your remote machine as well (i.e. a `code` executable already exists), you can use `code` for your local instance and `code-connect` for a IPC connected instance.
+If you have VS Code installed on your remote machine as well (i.e. a `code` executable already exists), you can use `code` for your local instance and `code-connect` for an IPC connected instance.
 
 ```
 Usage: code [options][paths...]
