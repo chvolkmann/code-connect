@@ -77,7 +77,7 @@ def get_code_binary() -> Path:
         )
 
     _, code_repo = code_repos[0]
-    return code_repo / "bin" / "code"
+    return code_repo / "bin" / "remote-cli" / "code"
 
 
 def get_ipc_socket(max_idle_time: int = DEFAULT_MAX_IDLE_TIME) -> Path:
