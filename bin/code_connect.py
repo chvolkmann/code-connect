@@ -29,7 +29,8 @@ def is_socket_open(path: Path) -> bool:
         # https://unix.stackexchange.com/a/556790/106406
         proc = sp.run(
             ["socat", "-u", "OPEN:/dev/null", f"UNIX-CONNECT:{path.resolve()}"],
-            stdout=sp.PIPE, stderr=sp.PIPE,
+            stdout=sp.PIPE,
+            stderr=sp.PIPE,
         )
         return proc.returncode == 0
     except FileNotFoundError:
