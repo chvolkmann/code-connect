@@ -29,7 +29,8 @@ def is_socket_open(path: Path) -> bool:
         # https://unix.stackexchange.com/a/556790/106406
         proc = sp.run(
             ["socat", "-u", "OPEN:/dev/null", f"UNIX-CONNECT:{path.resolve()}"],
-            capture_output=True,
+            stdout=sp.PIPE,
+            stderr=sp.PIPE,
         )
         return proc.returncode == 0
     except FileNotFoundError:
@@ -77,7 +78,7 @@ def get_code_binary() -> Path:
         )
 
     _, code_repo = code_repos[0]
-    return code_repo / "bin" / "code"
+    return code_repo / "bin" / "remote-cli" / "code"
 
 
 def get_ipc_socket(max_idle_time: int = DEFAULT_MAX_IDLE_TIME) -> Path:

@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Maybe your next idea?
 
+## [0.3.1] - 2022-04-04
+
+### Changed
+
+- Updated to reflect the VS Code binary location change from `~/.vscode-server/bin/<commit-id>/bin/code` to
+`~/.vscode-server/bin/<commit-id>/bin/remote-cli/code` in [commit
+f4ba7dd12b684b144457c6fc6ccc9f4fe71bde3c](microsoft/vscode@f4ba7dd),
+which was released in [March 2022 (version
+1.66)](https://github.com/microsoft/vscode/releases/tag/1.66.0).
+- Updated to support Python 3.5 and up.
+- Silence the `which` command's stderr stream, because the GNU `which` v2.21 command found on CentOS Stream 8 produces unnecessary error messages when we test for a locally installed VS Code binary.
+- Fixed a small formatting bug with an `if` statement in code.fish.
+
 ## [0.3.0] - 2021-02-18
 
 ### Added
