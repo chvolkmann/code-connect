@@ -6,8 +6,8 @@ import os
 import subprocess as sp
 import sys
 import time
-from distutils.spawn import find_executable
 from pathlib import Path
+from shutil import which
 from typing import Iterable, List, NoReturn, Sequence, Tuple
 
 # IPC sockets will be filtered based when they were last accessed
@@ -59,7 +59,7 @@ def next_open_socket(socks: Sequence[Path]) -> Path:
 
 def check_for_binaries() -> None:
     """ Verifies that all required binaries are available in $PATH. """
-    if not find_executable("socat"):
+    if not which("socat"):
         fail('"socat" not found in $PATH, but is required for code-connect')
 
 
