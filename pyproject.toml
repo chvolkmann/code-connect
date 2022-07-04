@@ -5,7 +5,7 @@ keywords = ["vscode"]
 license = "MIT"
 name = "code-connect"
 repository = "https://github.com/chvolkmann/code-connect"
-version = "0.2.1"
+version = "0.3.2"
 
 [tool.poetry.dependencies]
 python = "^3.8"
