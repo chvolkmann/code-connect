@@ -2,16 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
 Maybe your next idea?
 
-## [0.3.1] - 2022-04-04
+## [0.3.2] - 2022-07-04
+
+Integrates [#13](https://github.com/chvolkmann/code-connect/pull/13) contributed by [@typedrat](https://github.com/typedrat)
 
 ### Changed
+- Update `code_connect.py` to use `shutil` instead of the deprecated `distutils`
+
+## [0.3.1] - 2022-04-04
+
+
+Integrates [#11](https://github.com/chvolkmann/code-connect/pull/11) contributed by [@frecks](https://github.com/frecks)
+
+### Changed
+
 
 - Updated to reflect the VS Code binary location change from `~/.vscode-server/bin/<commit-id>/bin/code` to
 `~/.vscode-server/bin/<commit-id>/bin/remote-cli/code` in [commit
@@ -90,7 +100,9 @@ which was released in [March 2022 (version
 
 - Initial release of `code-connect` and the corresponding fish plugin
 
-[unreleased]: https://github.com/chvolkmann/code-connect/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/chvolkmann/code-connect/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/chvolkmann/code-connect/compare/v0.3.1...v0.3.2
+[0.3.1]: https://github.com/chvolkmann/code-connect/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/chvolkmann/code-connect/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/chvolkmann/code-connect/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/chvolkmann/code-connect/compare/v0.2.0...v0.2.1
