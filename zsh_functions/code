@@ -1,0 +1,9 @@
+# The $commands arrays are described in the zsh/parameter module to access the internal hash tables.
+# $+param expands to 0 if param is unset, and 1 if it's set.
+if [[ ${+commands[code]} -eq 1 ]] ; then
+    # code is a command, use that binary instead of the code-connect
+    command code "$@"
+else
+    # code not locally installed, use code-connect
+    code_connect.py "$@"
+fi

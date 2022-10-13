@@ -81,6 +81,36 @@ curl -sS https://raw.githubusercontent.com/chvolkmann/code-connect/main/bash/uni
 
 Deletes the aliases from `~/.bashrc` and removes the folder `~/.code-connect`
 
+### Zsh
+
+#### Installing
+
+With [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh)
+
+1. Clones the repository into `$ZSH_CUSTOM/plugins` (by default `~/.oh-my-zsh/custom/plugins`)
+
+```zsh
+git clone https://github.com/chvolkmann/code-connect $ZSH_CUSTOM/plugins/code-connect
+```
+
+2. Add `code-connect` to the plugins array in your `.zshrc` file
+
+```zsh
+plugins=(... code-connect)
+```
+
+#### Updating
+
+```zsh
+git -C $ZSH_CUSTOM/plugins/code-connect pull
+```
+
+#### Uninstalling
+
+```zsh
+rm -rf $ZSH_CUSTOM/plugins/code-connect
+```
+
 ## Usage
 
 Use `code` as you would normally!
