@@ -39,9 +39,7 @@ def is_socket_open(path: Path) -> bool:
 
 def sort_by_access_timestamp(paths: Iterable[Path]) -> List[Tuple[float, Path]]:
     """ Returns a list of tuples (last_accessed_ts, path) sorted by the former. """
-    paths = [(p.stat().st_atime, p) for p in paths]
-    paths = sorted(paths, reverse=True)
-    return paths
+    return sorted([(p.stat().st_atime, p) for p in paths], reverse=True)
 
 
 def next_open_socket(socks: Sequence[Path]) -> Path:
@@ -68,17 +66,17 @@ def get_code_binary() -> Path:
 
     # Every entry in ~/.vscode-server/bin corresponds to a commit id
     # Pick the most recent one
-    code_repos = sort_by_access_timestamp(Path.home().glob(".vscode-server/bin/*"))
+    code_repos = sort_by_access_timestamp(Path.home().glob(".vscode-server/cli/servers/*"))
     if len(code_repos) == 0:
         fail(
             "No installation of VS Code Server detected!",
             "",
             "Please connect to this machine through a remote SSH session and try again.",
-            "Afterwards there should exist a folder under ~/.vscode-server",
+            "Afterwards there should exist a folder under ~/.vscode-server/cli/servers/",
         )
 
     _, code_repo = code_repos[0]
-    return code_repo / "bin" / "remote-cli" / "code"
+    return code_repo / "server" / "bin" / "remote-cli" / "code"
 
 
 def get_ipc_socket(max_idle_time: int = DEFAULT_MAX_IDLE_TIME) -> Path:
