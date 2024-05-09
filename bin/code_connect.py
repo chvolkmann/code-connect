@@ -66,17 +66,24 @@ def get_code_binary() -> Path:
 
     # Every entry in ~/.vscode-server/bin corresponds to a commit id
     # Pick the most recent one
-    code_repos = sort_by_access_timestamp(Path.home().glob(".vscode-server/cli/servers/*"))
-    if len(code_repos) == 0:
+    code_bins = []
+    for root, dirs, files in os.walk(str(Path.home()) + "/.vscode-server/"):
+        if "code" in files:
+            result = sp.run([root+"/code"], stdout=sp.PIPE, stderr=sp.PIPE)
+            if result.stdout == b'Command is only available in WSL or inside a Visual Studio Code terminal.\n':
+                code_bins += [Path(root+"/code")]
+
+    if len(code_bins) == 0:
         fail(
-            "No installation of VS Code Server detected!",
+            "No VS Code remote-cli detected!",
             "",
             "Please connect to this machine through a remote SSH session and try again.",
             "Afterwards there should exist a folder under ~/.vscode-server/cli/servers/",
         )
 
-    _, code_repo = code_repos[0]
-    return code_repo / "server" / "bin" / "remote-cli" / "code"
+    _, code_bin = sort_by_access_timestamp(code_bins)[0]
+
+    return code_bin
 
 
 def get_ipc_socket(max_idle_time: int = DEFAULT_MAX_IDLE_TIME) -> Path:
