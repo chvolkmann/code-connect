@@ -26,9 +26,7 @@ c_emph="$c_magenta"
 c_path="$c_green"
 
 print() ( IFS=" " printf "$c_fg%s$c_reset\n" "$*" )
-
 log() ( IFS=" " printf "$c_log%s$c_reset\n" "$*" )
-
 error() ( IFS=" " printf "$c_err%s$c_reset\n" "$*" >&2 )
 
 
