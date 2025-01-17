@@ -23,6 +23,7 @@ c_emph="$c_magenta"
 c_path="$c_green"
 
 print() ( IFS=" " printf "$c_fg%s$c_reset\n" "$*" )
+print_n() ( IFS=" " printf "$c_fg%s$c_reset" "$*" )
 log() ( IFS=" " printf "$c_log%s$c_reset\n" "$*" )
 error() ( IFS=" " printf "$c_err%s$c_reset\n" "$*" >&2 )
 
@@ -37,7 +38,7 @@ alias_exists () {
 
 remove_alias () {
     name="$1"
-    if alias-exists "$name"; then
+    if alias_exists "$name"; then
         log "Removing alias ${c_emph}$name${c_log} from ${c_path}~/.bashrc"
         sed -i "/alias $name=/d" ~/.bashrc
     else
@@ -46,11 +47,31 @@ remove_alias () {
     unalias "$name" > /dev/null 2>&1
 }
 
+remove_aliases () {
+    print_n "May I modify your ${c_path}~/.bashrc${c_fg}? [yN] "
+    read -r yn
+
+    case $yn in
+        [Yy]*)
+            # Add the aliases to ~/.bashrc if not already done
+            remove_alias "code"
+            remove_alias "code-connect"
+
+            ;;
+        *)
+            print "Okay; make sure to remove the following from your shell-profile manually:"
+            print "alias code='...'"
+            print "alias code-connect='...'"
+            ;;
+    esac
+
+    printf \\n
+}
+
 
 #####
 
-remove_alias "code"
-remove_alias "code-connect"
+remove_aliases
 
 log "Removing ${c_path}$CODE_CONNECT_INSTALL_DIR"
 rm -rf $CODE_CONNECT_INSTALL_DIR
