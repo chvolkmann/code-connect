@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # https://github.com/chvolkmann/code-connect
 
@@ -12,12 +12,12 @@ CODE_CONNECT_BASE_URL="https://raw.githubusercontent.com/chvolkmann/code-connect
 
 # Fancy output helpers
 
-c_cyan=`tput setaf 7`
-c_red=`tput setaf 1`
-c_magenta=`tput setaf 6`
-c_grey=`tput setaf 8`
-c_green=`tput setaf 10`
-c_reset=`tput sgr0`
+c_cyan="$(tput setaf 7)"
+c_red="$(tput setaf 1)"
+c_magenta="$(tput setaf 6)"
+c_grey="$(tput setaf 8)"
+c_green="$(tput setaf 10)"
+c_reset="$(tput sgr0)"
 
 c_fg="$c_cyan"
 c_log="$c_grey"
@@ -25,22 +25,16 @@ c_err="$c_red"
 c_emph="$c_magenta"
 c_path="$c_green"
 
-print () {
-    echo "$c_fg$@$c_reset"
-}
+print() ( IFS=" " printf "$c_fg%s$c_reset\n" "$*" )
 
-log () {
-    echo "$c_log$@$c_reset"
-}
+log() ( IFS=" " printf "$c_log%s$c_reset\n" "$*" )
 
-error () {
-    echo "$c_err$@$c_reset"
-}
+error() ( IFS=" " printf "$c_err%s$c_reset\n" "$*" >&2 )
 
 
 # Helpers
 
-download-repo-file () {
+download_repo_file () {
     repo_path="$1"
     output_path="$2"
     url="$CODE_CONNECT_BASE_URL/$repo_path"
@@ -58,15 +52,15 @@ download-repo-file () {
     fi
 }
 
-alias-exists () {
+alias_exists () {
     name="$1"
-    cat ~/.bashrc | grep -q "alias $name=*"
+    grep -q "alias $name=*" ~/.bashrc
 }
 
-ensure-alias () {
+ensure_alias () {
     name="$1"
     val="$2"
-    if alias-exists "$name"; then
+    if alias_exists "$name"; then
         log "Alias ${c_emph}$name${c_log} already registered in ${c_path}~/.bashrc${c_log}, skipping"
     else
         echo "alias $name='$val'" >> ~/.bashrc
@@ -78,10 +72,10 @@ ensure-alias () {
 #####
 
 
-version=$(download-repo-file "VERSION" -)
-print ""
+version=$(download_repo_file "VERSION" -)
+printf \\n
 print "${c_emph}code-connect ${c_log}v$version"
-print ""
+printf \\n
 
 
 # Download the required files from the repository
@@ -89,37 +83,37 @@ print ""
 mkdir -p "$CODE_CONNECT_INSTALL_DIR/bin"
 
 CODE_CONNECT_PY="$CODE_CONNECT_INSTALL_DIR/bin/code_connect.py"
-download-repo-file "bin/code_connect.py" $CODE_CONNECT_PY
+download_repo_file "bin/code_connect.py" $CODE_CONNECT_PY
 chmod +x "$CODE_CONNECT_PY"
 
 mkdir -p "$CODE_CONNECT_INSTALL_DIR/bash"
 
 CODE_SH="$CODE_CONNECT_INSTALL_DIR/bash/code.sh"
-download-repo-file "bash/code.sh" $CODE_SH
+download_repo_file "bash/code.sh" $CODE_SH
 chmod +x "$CODE_SH"
 
 CODE_CONNECT_SH="$CODE_CONNECT_INSTALL_DIR/bash/code-connect.sh"
-download-repo-file "bash/code-connect.sh" $CODE_CONNECT_SH
+download_repo_file "bash/code-connect.sh" $CODE_CONNECT_SH
 chmod +x "$CODE_CONNECT_SH"
 
-print ""
+printf \\n
 
 
 # Add the aliases to ~/.bashrc if not already done
-ensure-alias "code" "$CODE_SH"
-ensure-alias "code-connect" "$CODE_CONNECT_SH"
+ensure_alias "code" "$CODE_SH"
+ensure_alias "code-connect" "$CODE_CONNECT_SH"
 
 
-print ""
+printf \\n
 print "${c_emph}code-connect${c_fg} installed to ${c_path}$CODE_CONNECT_INSTALL_DIR${c_fg} successfully!"
-print ""
+printf \\n
 print "Restart your shell or reload your ${c_path}.bashrc${c_fg} to see the changes."
-print ""
+printf \\n
 print "  ${c_emph}source ${c_path}.bashrc"
-print ""
+printf \\n
 
 
-local_code_binary=$(which code)
+local_code_binary="$(which code)"
 if test -z "$local_code_binary"; then
     print "Local installation of ${c_emph}code${c_fg} detected at ${c_path}$local_code_binary"
     print "Use the ${c_emph}code${c_fg} executable as you would normally."
