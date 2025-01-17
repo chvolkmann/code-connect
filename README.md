@@ -66,7 +66,7 @@ fisher remove chvolkmann/code-connect
 With [`shell/install.sh`](./shell/install.sh)
 
 ```sh
-curl -sS https://raw.githubusercontent.com/chvolkmann/code-connect/main/shell/install.sh | sh
+sh -c "$(curl -sSLo- https://raw.githubusercontent.com/chvolkmann/code-connect/main/shell/install.sh)"
 ```
 
 This downloads [`code_connect.py`](./bin/code_connect.py) along with two scripts and sets up aliases in your `.bashrc` for you. See [`shell/code.sh`](./shell/code.sh) and [`shell/code-connect.sh`](./shell/code-connect.sh)
@@ -76,7 +76,7 @@ This downloads [`code_connect.py`](./bin/code_connect.py) along with two scripts
 With [`shell/uninstall.sh`](./shell/uninstall.sh)
 
 ```sh
-curl -sS https://raw.githubusercontent.com/chvolkmann/code-connect/main/shell/uninstall.sh | sh
+sh -c "$(curl -sSLo- https://raw.githubusercontent.com/chvolkmann/code-connect/main/shell/uninstall.sh)"
 ```
 
 Deletes the aliases from `~/.bashrc` and removes the folder `~/.code-connect`

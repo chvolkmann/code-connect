@@ -43,7 +43,7 @@ download_repo_file () {
         log "Downloading ${c_path}$repo_path${c_log} from ${c_path}$url"
     fi
 
-    curl -sS -o "$output_path" "$url"
+    curl -sSL -o "$output_path" "$url"
     ret="$?"
     if test "$ret" != "0"; then
         error "ERROR: Could not fetch ${c_path}$url${c_err}"
