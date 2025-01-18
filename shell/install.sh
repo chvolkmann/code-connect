@@ -108,14 +108,14 @@ CODE_CONNECT_PY="$CODE_CONNECT_INSTALL_DIR/bin/code_connect.py"
 download_repo_file "bin/code_connect.py" $CODE_CONNECT_PY
 chmod +x "$CODE_CONNECT_PY"
 
-mkdir -p "$CODE_CONNECT_INSTALL_DIR/bash"
+mkdir -p "$CODE_CONNECT_INSTALL_DIR/shell"
 
-CODE_SH="$CODE_CONNECT_INSTALL_DIR/bash/code.sh"
-download_repo_file "bash/code.sh" $CODE_SH
+CODE_SH="$CODE_CONNECT_INSTALL_DIR/shell/code.sh"
+download_repo_file "shell/code.sh" $CODE_SH
 chmod +x "$CODE_SH"
 
-CODE_CONNECT_SH="$CODE_CONNECT_INSTALL_DIR/bash/code-connect.sh"
-download_repo_file "bash/code-connect.sh" $CODE_CONNECT_SH
+CODE_CONNECT_SH="$CODE_CONNECT_INSTALL_DIR/shell/code-connect.sh"
+download_repo_file "shell/code-connect.sh" $CODE_CONNECT_SH
 chmod +x "$CODE_CONNECT_SH"
 
 printf \\n
