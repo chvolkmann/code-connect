@@ -21,7 +21,7 @@ The aim of this project is to make the `code` cli available to _any_ terminal, n
 - **Python 3**
   > Tested under Python 3.6 and Python 3.8, but should work fine in Python 3.5 or newer.
 - **socat** - used for pinging UNIX sockets
-  ```bash
+  ```sh
   apt-get install socat
   ```
 
@@ -59,24 +59,24 @@ fisher update chvolkmann/code-connect
 fisher remove chvolkmann/code-connect
 ```
 
-### Bash
+### POSIX-compliant shells (bash, dash, etc.)
 
 #### Installing & Updating
 
-With [`bash/install.sh`](./bash/install.sh)
+With [`shell/install.sh`](./shell/install.sh)
 
-```bash
-curl -sS https://raw.githubusercontent.com/chvolkmann/code-connect/main/bash/install.sh | bash
+```sh
+sh -c "$(curl -sSLo- https://raw.githubusercontent.com/chvolkmann/code-connect/main/shell/install.sh)"
 ```
 
-This downloads [`code_connect.py`](./bin/code_connect.py) along with two scripts and sets up aliases in your `.bashrc` for you. See [`bash/code.sh`](./bash/code.sh) and [`bash/code-connect.sh`](./bash/code-connect.sh)
+This downloads [`code_connect.py`](./bin/code_connect.py) along with two scripts and sets up aliases in your `.bashrc` for you. See [`shell/code.sh`](./shell/code.sh) and [`shell/code-connect.sh`](./shell/code-connect.sh)
 
 #### Uninstalling
 
-With [`bash/uninstall.sh`](./bash/uninstall.sh)
+With [`shell/uninstall.sh`](./shell/uninstall.sh)
 
-```bash
-curl -sS https://raw.githubusercontent.com/chvolkmann/code-connect/main/bash/uninstall.sh | bash
+```sh
+sh -c "$(curl -sSLo- https://raw.githubusercontent.com/chvolkmann/code-connect/main/shell/uninstall.sh)"
 ```
 
 Deletes the aliases from `~/.bashrc` and removes the folder `~/.code-connect`
@@ -130,7 +130,7 @@ You can verify this by opening a connection to your remote machine. In one case,
 
 Run
 
-```bash
+```sh
 echo $VSCODE_IPC_HOOK_CLI
 ```
 
@@ -138,7 +138,7 @@ which displays an output in the integrated terminal, but not on the other one.
 
 In order, every socket is checked to see if it is listening. For this, the following snippet based on [this answer on StackOverflow](https://unix.stackexchange.com/a/556790) was used.
 
-```bash
+```sh
 socat -u OPEN:/dev/null UNIX-CONNECT:/path/to/socket
 ```
 
