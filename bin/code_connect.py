@@ -17,16 +17,20 @@ from typing import Iterable, NoReturn
 
 
 RUN_DIR = Path(f"/run/user/{os.getuid()}")
+"""Directory in which VSCode stores IPC sockets"""
+
 VSCODE_IPC_SOCKET_PATTERN = "vscode-ipc-*.sock"
+"""Pattern for VSCode IPC sockets"""
 
 VSCODE_HOME = Path.home() / ".vscode-server"
+"""Path to the VSCode server directory"""
+
 VSCODE_CODE_BIN_PATTERN = "cli/servers/Stable-*/server/bin/remote-cli/code"
+"""Pattern for the VSCode code binary"""
 
-
-MAX_SOCKET_IDLE_ITEM: float = 4 * 60 * 60
+MAX_SOCKET_IDLE_TIME_SECS: float = 4 * 60 * 60
 """
-IPC sockets will be filtered based on when they were last accessed.  
-This gives an upper bound in seconds to the timestamps
+Time in seconds after which IPC sockets will be considered stale and ignored.
 """
 
 
@@ -37,11 +41,11 @@ def fail(*msgs: str, retcode: int = 1) -> NoReturn:
     exit(retcode)
 
 
-def is_socket_alive(path: Path) -> bool:
+def is_socket_open(path: Path) -> bool:
     """Returns True iff the UNIX socket exists and is currently listening."""
     try:
+        # try to connect to the socket using socat
         # capture output to prevent printing to stdout/stderr
-        # https://unix.stackexchange.com/a/556790/106406
         proc = sp.run(
             ["socat", "-u", "OPEN:/dev/null", f"UNIX-CONNECT:{path.resolve()}"],
             stdout=sp.PIPE,
@@ -52,26 +56,15 @@ def is_socket_alive(path: Path) -> bool:
         return False
 
 
-def ensure_socat_is_in_PATH() -> None:
-    """Verifies that all required binaries are available in $PATH."""
-    if not which("socat"):
-        fail(
-            '"socat" not found in $PATH, but is required for running code-connect',
-            "",
-            "Please install it, e.g. using",
-            "  sudo apt install socat",
-        )
-
-
 def sort_by_access_timestamp(paths: Iterable[Path]) -> list[tuple[float, Path]]:
-    """Returns a list of tuples (last_accessed_ts, path) sorted by the former."""
+    """Returns a list of tuples (last_accessed_time, path) sorted by the former."""
     return sorted([(p.stat().st_atime, p) for p in paths], reverse=True)
 
 
 def get_next_open_socket(socks: Iterable[Path]) -> Path:
     """Iterates over the list and returns the first socket that is listening."""
     try:
-        return next((sock for sock in socks if is_socket_alive(sock)))
+        return next((sock for sock in socks if is_socket_open(sock)))
     except StopIteration:
         fail(
             "Could not find any open VS Code IPC socket.",
@@ -109,7 +102,7 @@ def list_ipc_sockets() -> list[Path]:
     return list(Path(f"/run/user/{uid}/").glob("vscode-ipc-*.sock"))
 
 
-def get_latest_ipc_socket(max_idle_time: float = MAX_SOCKET_IDLE_ITEM) -> Path:
+def get_latest_ipc_socket(max_idle_time: float = MAX_SOCKET_IDLE_TIME_SECS) -> Path:
     """Returns the path to the most recently accessed IPC socket."""
 
     # List all possible sockets for the current user
@@ -127,7 +120,7 @@ def get_latest_ipc_socket(max_idle_time: float = MAX_SOCKET_IDLE_ITEM) -> Path:
 
 def launch_code_over_ipc(
     args: list[str] | None = None,
-    max_socket_idle_item: float = MAX_SOCKET_IDLE_ITEM,
+    max_socket_idle_item: float = MAX_SOCKET_IDLE_TIME_SECS,
 ) -> int:
     """Runs the code executable with the given arguments."""
     if args is None:
@@ -141,6 +134,16 @@ def launch_code_over_ipc(
             "VSCODE_IPC_HOOK_CLI": str(latest_ipc_sock),
         },
     ).returncode
+
+
+def ensure_socat_is_in_PATH() -> None:
+    if not which("socat"):
+        fail(
+            '"socat" not found in $PATH, but is required for running code-connect',
+            "",
+            "Please install it, e.g. using",
+            "  sudo apt install socat",
+        )
 
 
 if __name__ == "__main__":
