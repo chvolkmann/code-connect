@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 
-# https://github.com/chvolkmann/code-connect
+"""
+code-connect - A tool for connecting to an existing VS Code instance from arbitrary terminals.
+
+https://github.com/chvolkmann/code-connect
+MIT Licensed
+"""
 
 import os
 import subprocess as sp
@@ -8,23 +13,31 @@ import sys
 import time
 from pathlib import Path
 from shutil import which
-from typing import Iterable, List, NoReturn, Sequence, Tuple
+from typing import Iterable, NoReturn
 
-DEFAULT_MAX_IDLE_TIME: int = 4 * 60 * 60
+
+RUN_DIR = Path(f"/run/user/{os.getuid()}")
+VSCODE_IPC_SOCKET_PATTERN = "vscode-ipc-*.sock"
+
+VSCODE_HOME = Path.home() / ".vscode-server"
+VSCODE_CODE_BIN_PATTERN = "cli/servers/Stable-*/server/bin/remote-cli/code"
+
+
+MAX_SOCKET_IDLE_ITEM: float = 4 * 60 * 60
 """
 IPC sockets will be filtered based on when they were last accessed.  
 This gives an upper bound in seconds to the timestamps
 """
 
 
-def fail(*msgs, retcode: int = 1) -> NoReturn:
+def fail(*msgs: str, retcode: int = 1) -> NoReturn:
     """Prints messages to stdout and exits the script."""
     for msg in msgs:
         print(msg)
     exit(retcode)
 
 
-def is_socket_open(path: Path) -> bool:
+def is_socket_alive(path: Path) -> bool:
     """Returns True iff the UNIX socket exists and is currently listening."""
     try:
         # capture output to prevent printing to stdout/stderr
@@ -39,46 +52,38 @@ def is_socket_open(path: Path) -> bool:
         return False
 
 
-def sort_by_access_timestamp(paths: Iterable[Path]) -> List[Tuple[float, Path]]:
+def ensure_socat_is_in_PATH() -> None:
+    """Verifies that all required binaries are available in $PATH."""
+    if not which("socat"):
+        fail(
+            '"socat" not found in $PATH, but is required for running code-connect',
+            "",
+            "Please install it, e.g. using",
+            "  sudo apt install socat",
+        )
+
+
+def sort_by_access_timestamp(paths: Iterable[Path]) -> list[tuple[float, Path]]:
     """Returns a list of tuples (last_accessed_ts, path) sorted by the former."""
     return sorted([(p.stat().st_atime, p) for p in paths], reverse=True)
 
 
-def next_open_socket(socks: Sequence[Path]) -> Path:
+def get_next_open_socket(socks: Iterable[Path]) -> Path:
     """Iterates over the list and returns the first socket that is listening."""
     try:
-        return next((sock for sock in socks if is_socket_open(sock)))
+        return next((sock for sock in socks if is_socket_alive(sock)))
     except StopIteration:
         fail(
-            "Could not find an open VS Code IPC socket.",
+            "Could not find any open VS Code IPC socket.",
             "",
-            "Please make sure to connect to this machine with a standard "
-            + "VS Code remote SSH session before using this tool.",
+            "Please make sure to connect to this machine with a standard VS Code remote SSH session before running code-connect.",
         )
 
 
-def check_for_binaries() -> None:
-    """Verifies that all required binaries are available in $PATH."""
-    if not which("socat"):
-        fail('"socat" not found in $PATH, but is required for code-connect')
-
-
-def get_code_binary() -> Path:
+def get_code_bin() -> Path:
     """Returns the path to the most recently accessed code executable."""
-
-    # Every entry in ~/.vscode-server/bin corresponds to a commit id
-    # Pick the most recent one
-    code_bins = []
-    for root, dirs, files in os.walk(str(Path.home()) + "/.vscode-server/"):
-        if "code" in files:
-            result = sp.run([root + "/code"], stdout=sp.PIPE, stderr=sp.PIPE)
-            if (
-                result.stdout
-                == b"Command is only available in WSL or inside a Visual Studio Code terminal.\n"
-            ):
-                code_bins += [Path(root + "/code")]
-
-    if len(code_bins) == 0:
+    possible_code_bins = [f for f in VSCODE_HOME.glob(VSCODE_CODE_BIN_PATTERN) if f.is_file()]
+    if not possible_code_bins:
         fail(
             "No VS Code remote-cli detected!",
             "",
@@ -86,46 +91,64 @@ def get_code_binary() -> Path:
             "Afterwards there should exist a folder under ~/.vscode-server/cli/servers/",
         )
 
-    _, code_bin = sort_by_access_timestamp(code_bins)[0]
+    if len(possible_code_bins) == 0:
+        fail(
+            "Could not find suitable executable for VS Code",
+            "",
+            f"Searched: {VSCODE_HOME / VSCODE_CODE_BIN_PATTERN}",
+        )
 
+    # select the binary that was most recently accessed
+    _, code_bin = sort_by_access_timestamp(possible_code_bins)[0]
     return code_bin
 
 
-def get_ipc_socket(max_idle_time: int = DEFAULT_MAX_IDLE_TIME) -> Path:
+def list_ipc_sockets() -> list[Path]:
+    """Returns a list of all possible IPC sockets for the current user."""
+    uid = os.getuid()
+    return list(Path(f"/run/user/{uid}/").glob("vscode-ipc-*.sock"))
+
+
+def get_latest_ipc_socket(max_idle_time: float = MAX_SOCKET_IDLE_ITEM) -> Path:
     """Returns the path to the most recently accessed IPC socket."""
 
     # List all possible sockets for the current user
     # Some of these are obsolete and not actively listening anymore
     uid = os.getuid()
-    socks = sort_by_access_timestamp(Path(f"/run/user/{uid}/").glob("vscode-ipc-*.sock"))
+    socket_entries = sort_by_access_timestamp(Path(f"/run/user/{uid}/").glob("vscode-ipc-*.sock"))
 
     # Only consider the ones that were active N seconds ago
     now = time.time()
-    socks = [sock for ts, sock in socks if now - ts <= max_idle_time]
+    socks = [sock for ts, sock in socket_entries if now - ts <= max_idle_time]
 
     # Find the first socket that is open, most recently accessed first
-    return next_open_socket(socks)
+    return get_next_open_socket(socks)
 
 
-def main(max_idle_time: int = DEFAULT_MAX_IDLE_TIME) -> NoReturn:
+def launch_code_over_ipc(
+    args: list[str] | None = None,
+    max_socket_idle_item: float = MAX_SOCKET_IDLE_ITEM,
+) -> int:
+    """Runs the code executable with the given arguments."""
+    if args is None:
+        args = []
+    code_bin = get_code_bin()
+    latest_ipc_sock = get_latest_ipc_socket(max_idle_time=max_socket_idle_item)
+    return sp.run(
+        args=[code_bin, *args],
+        env={
+            **os.environ,
+            "VSCODE_IPC_HOOK_CLI": str(latest_ipc_sock),
+        },
+    ).returncode
+
+
+def main() -> NoReturn:
     """Calls the code executable as a subprocess with the environment set up properly."""
-    check_for_binaries()
+    ensure_socat_is_in_PATH()
 
-    # Fetch the path of the "code" executable
-    # and determine an active IPC socket to use
-    code_binary = get_code_binary()
-    ipc_socket = get_ipc_socket(max_idle_time)
-
-    args = sys.argv.copy()
-    args[0] = str(code_binary)
-    os.environ["VSCODE_IPC_HOOK_CLI"] = str(ipc_socket)
-
-    # run the "code" executable with the proper environment variable set
-    # stdout/stderr remain connected to the current process
-    proc = sp.run(args)
-
-    # return the same exit code as the wrapped process
-    exit(proc.returncode)
+    return_code = launch_code_over_ipc(sys.argv[1:])
+    exit(return_code)
 
 
 if __name__ == "__main__":
