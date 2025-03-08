@@ -10,6 +10,9 @@ Maybe your next idea?
 
 ## [0.4.0] - 2025-03-08
 
+## Breaking Changes
+- Python 3.9+ required
+
 ## Added
 
 - Adds support for newer file structure of `~/.vscode-server/`
