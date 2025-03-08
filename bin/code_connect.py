@@ -10,9 +10,11 @@ from pathlib import Path
 from shutil import which
 from typing import Iterable, List, NoReturn, Sequence, Tuple
 
-# IPC sockets will be filtered based on when they were last accessed
-# This gives an upper bound in seconds to the timestamps
 DEFAULT_MAX_IDLE_TIME: int = 4 * 60 * 60
+"""
+IPC sockets will be filtered based on when they were last accessed.  
+This gives an upper bound in seconds to the timestamps
+"""
 
 
 def fail(*msgs, retcode: int = 1) -> NoReturn:
