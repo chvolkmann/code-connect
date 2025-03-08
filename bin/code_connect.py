@@ -143,13 +143,8 @@ def launch_code_over_ipc(
     ).returncode
 
 
-def main() -> NoReturn:
-    """Calls the code executable as a subprocess with the environment set up properly."""
+if __name__ == "__main__":
     ensure_socat_is_in_PATH()
 
-    return_code = launch_code_over_ipc(sys.argv[1:])
-    exit(return_code)
-
-
-if __name__ == "__main__":
-    main()
+    # run the code binary with the args of the current script and exit with the same return code
+    exit(launch_code_over_ipc(sys.argv[1:]))
