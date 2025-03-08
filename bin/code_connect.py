@@ -69,13 +69,16 @@ def get_next_open_socket(socks: Iterable[Path]) -> Path:
         fail(
             "Could not find any open VS Code IPC socket.",
             "",
+            f"Looked for sockets in: {RUN_DIR / VSCODE_IPC_SOCKET_PATTERN}",
             "Please make sure to connect to this machine with a standard VS Code remote SSH session before running code-connect.",
         )
 
 
 def get_code_bin() -> Path:
     """Returns the path to the most recently accessed code executable."""
-    possible_code_bins = [f for f in VSCODE_HOME.glob(VSCODE_CODE_BIN_PATTERN) if f.is_file()]
+    possible_code_bins = [
+        f for f in VSCODE_HOME.glob(VSCODE_CODE_BIN_PATTERN) if f.is_file()
+    ]
     if not possible_code_bins:
         fail(
             "No VS Code remote-cli detected!",
@@ -108,7 +111,9 @@ def get_latest_ipc_socket(max_idle_time: float = MAX_SOCKET_IDLE_TIME_SECS) -> P
     # List all possible sockets for the current user
     # Some of these are obsolete and not actively listening anymore
     uid = os.getuid()
-    socket_entries = sort_by_access_timestamp(Path(f"/run/user/{uid}/").glob("vscode-ipc-*.sock"))
+    socket_entries = sort_by_access_timestamp(
+        Path(f"/run/user/{uid}/").glob("vscode-ipc-*.sock")
+    )
 
     # Only consider the ones that were active N seconds ago
     now = time.time()
