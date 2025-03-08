@@ -4,17 +4,16 @@
 
 CODE_CONNECT_INSTALL_DIR=~/.code-connect
 
-
 ####
 
 # Fancy output helpers
 
-c_cyan=`tput setaf 7`
-c_red=`tput setaf 1`
-c_magenta=`tput setaf 6`
-c_grey=`tput setaf 8`
-c_green=`tput setaf 10`
-c_reset=`tput sgr0`
+c_cyan=$(tput setaf 7)
+c_red=$(tput setaf 1)
+c_magenta=$(tput setaf 6)
+c_grey=$(tput setaf 8)
+c_green=$(tput setaf 10)
+c_reset=$(tput sgr0)
 
 c_fg="$c_cyan"
 c_log="$c_grey"
@@ -22,28 +21,26 @@ c_err="$c_red"
 c_emph="$c_magenta"
 c_path="$c_green"
 
-print () {
+print() {
     echo "$c_fg$@$c_reset"
 }
 
-log () {
+log() {
     echo "$c_log$@$c_reset"
 }
 
-error () {
+error() {
     echo "$c_err$@$c_reset"
 }
 
-
 #####
 
-
-alias-exists () {
+alias-exists() {
     name="$1"
     cat ~/.bashrc | grep -q "alias $name=*"
 }
 
-remove-alias () {
+remove-alias() {
     name="$1"
     if alias-exists "$name"; then
         log "Removing alias ${c_emph}$name${c_log} from ${c_path}~/.bashrc"
@@ -51,12 +48,10 @@ remove-alias () {
     else
         log "Alias for ${c_emph}$name${c_log} not registered in ${c_path}~/.bashrc${c_log}, skipping"
     fi
-    unalias $name > /dev/null 2>&1
+    unalias $name >/dev/null 2>&1
 }
 
-
 #####
-
 
 remove-alias "code"
 remove-alias "code-connect"
