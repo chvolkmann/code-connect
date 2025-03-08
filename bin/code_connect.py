@@ -10,20 +10,20 @@ from pathlib import Path
 from shutil import which
 from typing import Iterable, List, NoReturn, Sequence, Tuple
 
-# IPC sockets will be filtered based when they were last accessed
+# IPC sockets will be filtered based on when they were last accessed
 # This gives an upper bound in seconds to the timestamps
 DEFAULT_MAX_IDLE_TIME: int = 4 * 60 * 60
 
 
 def fail(*msgs, retcode: int = 1) -> NoReturn:
-    """ Prints messages to stdout and exits the script. """
+    """Prints messages to stdout and exits the script."""
     for msg in msgs:
         print(msg)
     exit(retcode)
 
 
 def is_socket_open(path: Path) -> bool:
-    """ Returns True iff the UNIX socket exists and is currently listening. """
+    """Returns True iff the UNIX socket exists and is currently listening."""
     try:
         # capture output to prevent printing to stdout/stderr
         # https://unix.stackexchange.com/a/556790/106406
@@ -38,12 +38,12 @@ def is_socket_open(path: Path) -> bool:
 
 
 def sort_by_access_timestamp(paths: Iterable[Path]) -> List[Tuple[float, Path]]:
-    """ Returns a list of tuples (last_accessed_ts, path) sorted by the former. """
+    """Returns a list of tuples (last_accessed_ts, path) sorted by the former."""
     return sorted([(p.stat().st_atime, p) for p in paths], reverse=True)
 
 
 def next_open_socket(socks: Sequence[Path]) -> Path:
-    """ Iterates over the list and returns the first socket that is listening. """
+    """Iterates over the list and returns the first socket that is listening."""
     try:
         return next((sock for sock in socks if is_socket_open(sock)))
     except StopIteration:
@@ -56,22 +56,25 @@ def next_open_socket(socks: Sequence[Path]) -> Path:
 
 
 def check_for_binaries() -> None:
-    """ Verifies that all required binaries are available in $PATH. """
+    """Verifies that all required binaries are available in $PATH."""
     if not which("socat"):
         fail('"socat" not found in $PATH, but is required for code-connect')
 
 
 def get_code_binary() -> Path:
-    """ Returns the path to the most recently accessed code executable. """
+    """Returns the path to the most recently accessed code executable."""
 
     # Every entry in ~/.vscode-server/bin corresponds to a commit id
     # Pick the most recent one
     code_bins = []
     for root, dirs, files in os.walk(str(Path.home()) + "/.vscode-server/"):
         if "code" in files:
-            result = sp.run([root+"/code"], stdout=sp.PIPE, stderr=sp.PIPE)
-            if result.stdout == b'Command is only available in WSL or inside a Visual Studio Code terminal.\n':
-                code_bins += [Path(root+"/code")]
+            result = sp.run([root + "/code"], stdout=sp.PIPE, stderr=sp.PIPE)
+            if (
+                result.stdout
+                == b"Command is only available in WSL or inside a Visual Studio Code terminal.\n"
+            ):
+                code_bins += [Path(root + "/code")]
 
     if len(code_bins) == 0:
         fail(
@@ -87,7 +90,7 @@ def get_code_binary() -> Path:
 
 
 def get_ipc_socket(max_idle_time: int = DEFAULT_MAX_IDLE_TIME) -> Path:
-    """ Returns the path to the most recently accessed IPC socket. """
+    """Returns the path to the most recently accessed IPC socket."""
 
     # List all possible sockets for the current user
     # Some of these are obsolete and not actively listening anymore
@@ -103,7 +106,7 @@ def get_ipc_socket(max_idle_time: int = DEFAULT_MAX_IDLE_TIME) -> Path:
 
 
 def main(max_idle_time: int = DEFAULT_MAX_IDLE_TIME) -> NoReturn:
-    """ Calls the code executable as a subprocess with the environment set up properly. """
+    """Calls the code executable as a subprocess with the environment set up properly."""
     check_for_binaries()
 
     # Fetch the path of the "code" executable
