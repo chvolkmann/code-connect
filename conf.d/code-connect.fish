@@ -9,6 +9,7 @@ function _on_code-connect_install --on-event code-connect_install
 end
 
 function _on_code-connect_update --on-event code-connect_update
+    _on_code-connect_uninstall
     _on_code-connect_install
 end
 
