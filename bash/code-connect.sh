@@ -6,3 +6,4 @@
 #   alias code-connect="/path/to/code-connect.sh"
 
 ~/.code-connect/bin/code_connect.py $@
+exit $?

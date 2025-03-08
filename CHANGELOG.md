@@ -8,9 +8,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Maybe your next idea?
 
+## [0.4.0] - 2025-03-08
+
+## Breaking Changes
+- Python 3.9+ required
+
+## Added
+
+- Adds support for newer file structure of `~/.vscode-server/`
+  - `code` is searched for in `~/.vscode-server/cli/servers/Stable-*/server/bin/remote-cli/code`
+  - IPC sockets are searched for in `/run/user/$UID/vscoe-ipc-*.sock`
+  - Integrates [#17](https://github.com/chvolkmann/code-connect/pull/17) contributed by [@Mikrz](https://github.com/Mikrz)
+
+- Adds support for piping data from stdin, e.g. `cat access.log | code -`
+
+
 ## [0.3.2] - 2022-07-04
 
-Integrates [#13](https://github.com/chvolkmann/code-connect/pull/13) contributed by [@typedrat](https://github.com/typedrat)
+- Integrates [#13](https://github.com/chvolkmann/code-connect/pull/13) contributed by [@typedrat](https://github.com/typedrat)
 
 ### Changed
 - Update `code_connect.py` to use `shutil` instead of the deprecated `distutils`
@@ -18,7 +33,7 @@ Integrates [#13](https://github.com/chvolkmann/code-connect/pull/13) contributed
 ## [0.3.1] - 2022-04-04
 
 
-Integrates [#11](https://github.com/chvolkmann/code-connect/pull/11) contributed by [@frecks](https://github.com/frecks)
+- Integrates [#11](https://github.com/chvolkmann/code-connect/pull/11) contributed by [@frecks](https://github.com/frecks)
 
 ### Changed
 
@@ -100,7 +115,8 @@ which was released in [March 2022 (version
 
 - Initial release of `code-connect` and the corresponding fish plugin
 
-[unreleased]: https://github.com/chvolkmann/code-connect/compare/v0.3.2...HEAD
+[unreleased]: https://github.com/chvolkmann/code-connect/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/chvolkmann/code-connect/compare/v0.3.2...v0.4.0
 [0.3.2]: https://github.com/chvolkmann/code-connect/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/chvolkmann/code-connect/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/chvolkmann/code-connect/compare/v0.2.2...v0.3.0

@@ -1,11 +1,14 @@
-.PHONY: lint format
+.PHONY: deps format lint typecheck check
 
-code-style: format lint
+deps:
+	poetry install
 
-lint:
-	flake8 .
+check: lint typecheck
 
-format:
-	black .
-	isort .
 
+format: deps
+	poetry run ruff format bin/
+lint: deps
+	poetry run ruff check bin/
+typecheck: deps
+	poetry run mypy bin/
